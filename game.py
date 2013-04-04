@@ -1,35 +1,20 @@
-##   ____           _                ____
-##  / ___|__ _  ___| |_ _   _ ___   / ___|__ _ _ __  _   _  ___  _ __
-## | |   / _` |/ __| __| | | / __| | |   / _` | '_ \| | | |/ _ \| '_ \
-## | |__| (_| | (__| |_| |_| \__ \ | |__| (_| | | | | |_| | (_) | | | |
-##  \____\__,_|\___|\__|\__,_|___/  \____\__,_|_| |_|\__, |\___/|_| |_|
-##                                                   |___/
-##           ___ ___  _  _ _____ ___ _  _ _   _ ___ ___
-##          / __/ _ \| \| |_   _|_ _| \| | | | | __|   \
-##         | (_| (_) | .` | | |  | || .` | |_| | _|| |) |
-##          \___\___/|_|\_| |_| |___|_|\_|\___/|___|___/
+## Independence Day Remake
 ##
-## A P-ROC Project by Eric Priepke, Copyright 2012
+## A P-ROC Project by Zachary Stauffer, Copyright 2012
 ## Built on the PyProcGame Framework from Adam Preble and Gerry Stellenberg
-## Original Cactus Canyon software by Matt Coriale
 ##
-##  __  __       _          ____
-## |  \/  | __ _(_)_ __    / ___| __ _ _ __ ___   ___
-## | |\/| |/ _` | | '_ \  | |  _ / _` | '_ ` _ \ / _ \
-## | |  | | (_| | | | | | | |_| | (_| | | | | | |  __/
-## |_|  |_|\__,_|_|_| |_|  \____|\__,_|_| |_| |_|\___|
 
 #import logging
 #logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
 from procgame import *
-import cc_modes
+import id4Modes
 import pinproc
-import tracking
-from assets import *
-import ep
+#import tracking
+#from assets import *
+#import ep
 import pygame
-import highscore
+#import highscore
 import time
 import datetime
 import os
@@ -45,7 +30,7 @@ user_settings_path = curr_file_path + "/config/user_settings.yaml"
 dots_path = curr_file_path + "/dots/"
 
 ## Subclass BasicGame to create the main game
-class CCGame(game.BasicGame):
+class id4Game(game.BasicGame):
     def __init__(self,machineType, fakePinProc = False):
         if (fakePinProc):
             self.fakePinProc = True
@@ -53,25 +38,17 @@ class CCGame(game.BasicGame):
         else:
             self.fakePinProc = False
         self.restart = False
-        # optional USB updater config settings
-        self.usb_update = config.value_for_key_path(keypath='usb_update', default=False)
-        if self.usb_update:
-            self.usb_location = config.values['usb_location']
-            self.game_location = config.values['game_location']
-        # optional real knocker setting
-        self.useKnocker = config.value_for_key_path(keypath='use_knocker', default=False)
-        if self.useKnocker:
-            print "Knocker Config Found!"
+       
         # used to prevent the high score entry from restarting the music
         self.soundIntro = False
         self.shutdownFlag = config.value_for_key_path(keypath='shutdown_flag',default=False)
         self.buttonShutdown = config.value_for_key_path(keypath='power_button_combo', default=False)
         self.moonlightFlag = False
 
-        super(CCGame, self).__init__(machineType)
-        use_desktop = config.value_for_key_path(keypath='use_desktop', default=True)
-        color_desktop = config.value_for_key_path(keypath='color_desktop', default=False)
-        if use_desktop:
+        super(id4Game, self).__init__(machineType)
+        #use_desktop = config.value_for_key_path(keypath='use_desktop', default=True)
+        #color_desktop = config.value_for_key_path(keypath='color_desktop', default=False)
+        ''' if use_desktop:
             # if not color, run the old style pygame
             if not color_desktop:
                 from procgame.desktop import Desktop
@@ -83,7 +60,7 @@ class CCGame(game.BasicGame):
                 # load the images for the colorized display
                 self.desktop.load_images(dots_path)
 
-        self.load_config('cc_machine.yaml')
+        self.load_config('cc_machine.yaml')'''
 
 
     def setup(self):
@@ -96,8 +73,6 @@ class CCGame(game.BasicGame):
         self.reset()
 
     def reset(self):
-        # run the reset from proc.game.BasicGame
-        #super(CCGame,self).reset()
         # game reset stuff - copied in
         """Reset the game state as a slam tilt might."""
         self.ball = 0
@@ -108,25 +83,25 @@ class CCGame(game.BasicGame):
         self.modes.modes = []
 
         # software version number
-        self.revision = "2013.03.27"
+        self.revision = "1"
 
         # basic game reset stuff, copied in
 
         ## init the sound
         self.sound = sound.SoundController(self)
         ## init the lamp controller
-        self.lampctrl = ep.EP_LampController(self)
+        #self.lampctrl = ep.EP_LampController(self)
         ## and a separate one for GI
-        self.GI_lampctrl = ep.EP_LampControllerGI(self)
+        #self.GI_lampctrl = ep.EP_LampControllerGI(self)
         ## load all the assets (sound/dots)
-        self.assets = Assets(self)
+        #self.assets = Assets(self)
         ## Set the current song for use with the music method
-        self.current_music = self.assets.music_mainTheme
+        #self.current_music = self.assets.music_mainTheme
 
         # reset score display to mine
-        self.score_display = cc_modes.ScoreDisplay(self,0)
+        #self.score_display = cc_modes.ScoreDisplay(self,0)
 
-        self.showcase = ep.EP_Showcase(self)
+        #self.showcase = ep.EP_Showcase(self)
 
         # last switch variable for tracking
         self.lastSwitch = None
@@ -140,9 +115,8 @@ class CCGame(game.BasicGame):
                         self.lamps.gi02,
                         self.lamps.gi03]
         # squelch flag used by audio routines to turn down music without stopping it
-        self.squelched = False
-        # polly mode variable
-        self.peril = False
+        #self.squelched = False
+        
         # status display ok ornot
         self.statusOK = False
         self.endBusy = False
@@ -163,122 +137,37 @@ class CCGame(game.BasicGame):
         self.sound.set_volume(self.volume_to_set)
         self.previousVolume = self.volume_to_set
 
-        self.immediateRestart = "Enabled" == self.user_settings['Gameplay (Feature)']['Fast Restart After Game']
+        #self.immediateRestart = "Enabled" == self.user_settings['Gameplay (Feature)']['Fast Restart After Game']
 
         # Set the balls per game per the user settings
         self.balls_per_game = self.user_settings['Machine (Standard)']['Balls Per Game']
         # Flipper pulse strength
         self.flipperPulse = self.user_settings['Machine (Standard)']['Flipper Pulse']
-        # Moonlight window
-        self.moonlightMinutes = self.user_settings['Gameplay (Feature)']['Moonlight Mins to Midnight']
-
+        
         # set up the ball search
         self.setup_ball_search()
 
         # set up the trough mode
         trough_switchnames = ['troughBallOne', 'troughBallTwo', 'troughBallThree', 'troughBallFour']
         early_save_switchnames = ['rightOutlane', 'leftOutlane']
-        self.trough = cc_modes.Trough(self, trough_switchnames,'troughBallOne','troughEject', early_save_switchnames, 'shooterLane', self.ball_drained)
+        self.trough = id4Modes.Trough(self, trough_switchnames,'troughBallOne','troughEject', early_save_switchnames, 'shooterLane', self.ball_drained)
         # set the ball save callback
         self.trough.ball_save_callback = self.ball_saved
 
-        #  _   _ _       _       ____                       ____       _
-        # | | | (_) __ _| |__   / ___|  ___ ___  _ __ ___  / ___|  ___| |_ _   _ _ __
-        # | |_| | |/ _` | '_ \  \___ \ / __/ _ \| '__/ _ \ \___ \ / _ \ __| | | | '_ \
-        # |  _  | | (_| | | | |  ___) | (_| (_) | | |  __/  ___) |  __/ |_| |_| | |_) |
-        # |_| |_|_|\__, |_| |_| |____/ \___\___/|_|  \___| |____/ \___|\__|\__,_| .__/
-        #          |___/                                                        |_|
-
-
-        self.highscore_categories = []
+        #High Score Setup
+        '''self.highscore_categories = []
 
         cat = highscore.HighScoreCategory()
         cat.game_data_key = 'ClassicHighScoreData'
         self.highscore_categories.append(cat)
 
-        cat = highscore.HighScoreCategory()
-        cat.game_data_key = 'MarshallHighScoreData'
-        cat.titles = ['Marshall Pinball 1','Marshall Pinball 2','Marshall Pinball 3']
-        cat.score_for_player = lambda player: self.show_tracking('marshallBest')
-        self.highscore_categories.append(cat)
-
-        cat = highscore.HighScoreCategory()
-        cat.game_data_key = 'LastCallHighScoreData'
-        cat.titles = ['Last Call Champ']
-        cat.score_for_player = lambda player: self.show_tracking('lastCallTotal')
-        self.highscore_categories.append(cat)
-
-        cat = highscore.HighScoreCategory()
-        cat.game_data_key = 'QuickdrawChampHighScoreData'
-        cat.titles = ['Quickdraw Champ']
-        cat.score_for_player = lambda player: self.show_tracking('quickdrawsWon')
-        self.highscore_categories.append(cat)
-
-        cat = highscore.HighScoreCategory()
-        cat.game_data_key = 'ShowdownChampHighScoreData'
-        cat.score_for_player = lambda player: self.show_tracking('showdownTotal')
-        cat.titles = ['Showdown Champ']
-        self.highscore_categories.append(cat)
-
-        cat = highscore.HighScoreCategory()
-        cat.game_data_key = 'AmbushChampHighScoreData'
-        cat.score_for_player = lambda player: self.show_tracking('ambushTotal')
-        cat.titles = ['Ambush Champ']
-        self.highscore_categories.append(cat)
-
-        cat = highscore.HighScoreCategory()
-        cat.game_data_key = 'TownDrunkHighScoreData'
-        cat.score_for_player = lambda player: self.show_tracking('beerMugHitsTotal')
-        cat.titles = ['Town Drunk']
-        self.highscore_categories.append(cat)
-
-        cat = highscore.HighScoreCategory()
-        cat.game_data_key = 'TumbleweedChampHighScoreData'
-        cat.score_for_player = lambda player: self.show_tracking('tumbleweedHitsTotal')
-        cat.titles = ['Tumbleweed Champ']
-        self.highscore_categories.append(cat)
-
-        cat = highscore.HighScoreCategory()
-        cat.game_data_key = 'UndertakerHighScoreData'
-        cat.score_for_player = lambda player: self.show_tracking('kills')
-        cat.titles = ['Undertaker']
-        self.highscore_categories.append(cat)
-
-        cat = highscore.HighScoreCategory()
-        cat.game_data_key = 'BountyHunterHighScoreData'
-        cat.score_for_player = lambda player: self.show_tracking('bartsDefeatedTotal')
-        cat.titles = ['Bounty Hunter']
-        self.highscore_categories.append(cat)
-
-        cat = highscore.HighScoreCategory()
-        cat.game_data_key = 'MotherlodeChampHighScoreData'
-        cat.score_for_player = lambda player: self.show_tracking('motherlodeValue')
-        cat.titles = ['Motherlode Champ']
-        self.highscore_categories.append(cat)
-
-        cat = highscore.HighScoreCategory()
-        cat.game_data_key = 'ComboChampHighScoreData'
-        cat.score_for_player = lambda player: self.show_tracking('bigChain')
-        cat.titles = ['Combo Champ']
-        self.highscore_categories.append(cat)
-
-        cat = highscore.HighScoreCategory()
-        cat.game_data_key = 'MoonlightHighScoreData'
-        cat.score_for_player = lambda player: self.show_tracking('moonlightTotal')
-        cat.titles = ['Moonlight Champ']
-        self.highscore_categories.append(cat)
-
         for category in self.highscore_categories:
             category.load_from_game(self)
-
-        #  __  __           _             ___       _ _
-        # |  \/  | ___   __| | ___  ___  |_ _|_ __ (_) |_
-        # | |\/| |/ _ \ / _` |/ _ \/ __|  | || '_ \| | __|
-        # | |  | | (_) | (_| |  __/\__ \  | || | | | | |_
-        # |_|  |_|\___/ \__,_|\___||___/ |___|_| |_|_|\__|
+'''
+        #Initialize all of the modes
 
         # Create the objects for the basic modes
-        self.lamp_control = cc_modes.LampControl(game=self,priority=4)
+        '''self.lamp_control = cc_modes.LampControl(game=self,priority=4)
         self.base = cc_modes.BaseGameMode(game=self,priority=4)
         self.attract_mode = cc_modes.Attract(game=self,priority=5)
         self.train = cc_modes.Train(game=self,priority=6)
@@ -396,10 +285,10 @@ class CCGame(game.BasicGame):
         self.modes.add(self.badge)
         self.modes.add(self.interrupter)
         self.modes.add(self.switch_tracker)
-        self.modes.add(self.score_display)
+        self.modes.add(self.score_display)'''
 
     def start_game(self,forceMoonlight=False):
-        # Check the time
+        '''# Check the time
         now = datetime.datetime.now()
         print "Hour: " + str(now.hour) + " Minutes: " + str(now.minute)
         # subtract the window minutes from 60
@@ -415,24 +304,24 @@ class CCGame(game.BasicGame):
         elif forceMoonlight:
             self.moonlightFlag = True
         else:
-            self.moonlightFlag = False
+            self.moonlightFlag = False'''
 
         # remove the attract mode
         self.modes.remove(self.attract_mode)
         # kill the attract mode song fade delay just in case
         self.interrupter.cancel_delayed("Attract Fade")
         # tick up the audits
-        self.game_data['Audits']['Games Started'] += 1
+        #self.game_data['Audits']['Games Started'] += 1
         # tick up all the switch hit tracking by one
-        for switch in self.game_data['SwitchHits']:
+        '''for switch in self.game_data['SwitchHits']:
             self.game_data['SwitchHits'][switch] +=1
-            print switch + " " + str(self.game_data['SwitchHits'][switch])
+            print switch + " " + str(self.game_data['SwitchHits'][switch])'''
         # turn off all the ligths
         for lamp in self.lamps:
             if 'gi' not in lamp.name:
                 lamp.disable()
         # run the start ball from parent
-        super(CCGame,self).start_game()
+        super(id4Game,self).start_game()
         # Add the first player
         self.add_player()
         self.order_mobs()
@@ -450,82 +339,68 @@ class CCGame(game.BasicGame):
         # reset the autoplunger count
         self.trough.balls_to_autoplunge = 0
         # run the start_ball from proc.game.BasicGame
-        super(CCGame, self).start_ball()
+        super(id4Game, self).start_ball()
         if len(self.players) > 1 and not self.interrupter.hush:
             self.interrupter.display_player_number()
 
     def create_player(self,name):
         # create an object wiht the Tracking Class - subclassed off game.Player
-        return tracking.Tracking(name)
+        #return tracking.Tracking(name)
 
     def game_started(self):
         self.log("GAME STARTED")
         # run the game_started from proc.game.BasicGame
-        super(CCGame, self).game_started()
+        super(id4Game, self).game_started()
         # Don't start_ball() here, since Attract does that after calling start_game().
 
     def shoot_again(self):
-        self.interrupter.shoot_again()
+        #self.interrupter.shoot_again()
 
     def ball_starting(self):
         # restore music, just in case
         self.restore_music()
         print "BALL STARTING - number " + str(self.ball)
         ## run the ball_starting from proc.gameBasicGame
-        super(CCGame, self).ball_starting()
+        super(id4Game, self).ball_starting()
         self.ballStarting = True
         # turn on the GI
         self.gi_control("ON")
-        # set peril (polly indicator) to false
-        self.peril = False
         # reset the pop bumper count
-        self.set_tracking('bumperHits',0)
+        #self.set_tracking('bumperHits',0)
         # reset the player bonus
-        self.set_tracking('bonus', 0)
-        # reset the train just in case - type 2, should only back the train up if it's out
-        self.train.stop_at = 0
-        self.train.reset_toy(step=2)
+        #self.set_tracking('bonus', 0)
         # enable the ball search
         self.ball_search.enable()
         # turn the flippers on
         self.enable_flippers(True)
         # reset the tilt status
-        self.set_tracking('tiltStatus',0)
-        # reset the stack levels
+        #self.set_tracking('tiltStatus',0)
+        '''# reset the stack levels
         for i in range(0,7,1):
-            self.set_tracking('stackLevel',False,i)
+            self.set_tracking('stackLevel',False,i)'''
 
-        # divert here if moonlight madness should run for this player
-        #self.moonlightFlag = True
-        if self.moonlightFlag and self.show_tracking('moonlightStatus') == False:
-            self.modes.add(self.moonlight)
+        # launch a ball, unless there is one in the shooter lane already
+        if not self.switches.shooterLane.is_active():
+            self.trough.launch_balls(1) # eject a ball into the shooter lane
         else:
-            # launch a ball, unless there is one in the shooter lane already
-            if not self.switches.shooterLane.is_active():
-                self.trough.launch_balls(1) # eject a ball into the shooter lane
-            else:
-                self.trough.num_balls_in_play += 1
+            self.trough.num_balls_in_play += 1
 
-            # if skillshot is already running for some lame reason, remove it
-            if self.skill_shot in self.modes:
-                self.skill_shot.unload()
-            # add teh skill shot.
-            self.modes.add(self.skill_shot)
-            # and all the other modes
-            print "CHECKING TRACKING Ball start LR: " + str(self.show_tracking('leftRampStage'))
-            self.base.load_modes()
-            # if we're under 2 minutes and on the last ball, enable BOZO BALL (tm)
-            if self.current_player().game_time < 120 and self.ball == self.balls_per_game:
-                self.base.enable_bozo_ball()
-            # update the lamps
-            self.lamp_control.update()
+        # if skillshot is already running for some lame reason, remove it
+        if self.skill_shot in self.modes:
+            self.skill_shot.unload()
+        # add skill shot.
+        self.modes.add(self.skill_shot)
+        # and all the other modes
+        self.base.load_modes()
+        # update the lamps
+        self.lamp_control.update()
 
     def ball_saved(self):
         if self.trough.ball_save_active:
             # tell interrupter jones to show the ball save
-            print "GAME THINKS THE BALL WAS SAVED"
+            #print "GAME THINKS THE BALL WAS SAVED"
             # the ball saved display
-            self.interrupter.ball_saved()
+            #self.interrupter.ball_saved()
             # kill the skillshot if it's running
             if self.skill_shot in self.modes:
                 self.skill_shot.unload()
@@ -542,13 +417,11 @@ class CCGame(game.BasicGame):
             if self.last_call in self.modes:
                 self.last_call.ball_drained()
                 return
-            if self.moonlight.running:
-                self.moonlight.ball_drained()
-                return
+         
             # Tell every mode a ball has drained by calling the ball_drained function if it exists
             if self.trough.num_balls_in_play == 0:
                 # kill all the display layers
-                for mode in self.ep_modes:
+                for mode in self.id4Modes:
                     if getattr(mode, "clear_layer", None):
                         mode.clear_layer()
                 print "BALL DRAINED IS KILLING THE MUSIC"
@@ -573,10 +446,7 @@ class CCGame(game.BasicGame):
         # unload the base add on modes
         self.base.remove_modes()
 
-        print "CHECKING TRACKING ball ended LR: " + str(self.show_tracking('leftRampStage'))
-
         # then call the ball_ended from proc.game.BasicGame
-        # Looping here? wha?
         self.end_ball()
 
 
@@ -589,8 +459,8 @@ class CCGame(game.BasicGame):
         self.ball_time = self.get_ball_time()
         self.current_player().game_time += self.ball_time
 
-        self.game_data['Audits']['Avg Ball Time'] = self.calc_time_average_string(self.game_data['Audits']['Balls Played'], self.game_data['Audits']['Avg Ball Time'], self.ball_time)
-        self.game_data['Audits']['Balls Played'] += 1
+        '''self.game_data['Audits']['Avg Ball Time'] = self.calc_time_average_string(self.game_data['Audits']['Balls Played'], self.game_data['Audits']['Avg Ball Time'], self.ball_time)
+        self.game_data['Audits']['Balls Played'] += 1'''
 
         if self.current_player().extra_balls > 0:
             self.current_player().extra_balls -= 1
@@ -620,7 +490,7 @@ class CCGame(game.BasicGame):
         # and the skillshot
         self.modes.remove(self.skill_shot)
         # throw up a message about restarting
-        self.interrupter.restarting()
+        #self.interrupter.restarting()
         # lot the end of the game
         self.log("GAME PREMATURELY ENDED")
         # set the Balls in play to 0
@@ -631,17 +501,15 @@ class CCGame(game.BasicGame):
 
     def game_ended(self):
         self.log("GAME ENDED")
-        # kill the moonlight flag
-        self.moonlightFlag = False
         ## call the game_ended from proc.game.BasicGame
-        super(CCGame, self).game_ended()
+        super(id4Game, self).game_ended()
 
         # remove the base game mode
         # self.modes.remove(self.base)
         # turn the flippers off
         self.enable_flippers(enable=False)
 
-        # tally up the some audit data
+        '''# tally up the some audit data
         # Also handle game stats.
         for i in range(0,len(self.players)):
             game_time = self.get_game_time(i)
@@ -653,29 +521,29 @@ class CCGame(game.BasicGame):
             # +1 the stat for each players final rank
             self.game_data['Feature'][ranks[self.players[i].player_stats['rank']]] += 1
         # save the game data
-        self.save_game_data()
+        self.save_game_data()'''
 
         # divert to the match before high score entry - unless last call is disabled
-        lastCall = 'Enabled' == self.user_settings['Gameplay (Feature)']['Last Call Mode']
+        '''lastCall = 'Enabled' == self.user_settings['Gameplay (Feature)']['Last Call Mode']
         if lastCall:
             self.modes.add(self.match)
             self.match.run_match()
         else:
-            self.run_highscore()
+            self.run_highscore()'''
 
     def run_highscore(self):
         # Remove the base mode here now instead - so that it's still available for last call
         self.modes.remove(self.base)
 
-        # High Score Stuff
+       ''' # High Score Stuff
         self.seq_manager = highscore.EntrySequenceManager(game=self, priority=2)
         self.seq_manager.finished_handler = self.highscore_entry_finished
         self.seq_manager.logic = highscore.CategoryLogic(game=self, categories=self.highscore_categories)
         self.seq_manager.ready_handler = self.highscore_entry_ready_to_prompt
-        self.modes.add(self.seq_manager)
+        self.modes.add(self.seq_manager)'''
 
     def highscore_entry_ready_to_prompt(self, mode, prompt):
-        banner_mode = game.Mode(game=self, priority=8)
+        '''banner_mode = game.Mode(game=self, priority=8)
         textLine1 = "GREAT JOB"
         textLine2 = (prompt.left.upper())
         textLayer1 = dmd.TextLayer(58, 5, self.assets.font_10px_AZ, "center", opaque=False).set_text(textLine1)
@@ -690,14 +558,14 @@ class CCGame(game.BasicGame):
         if not self.soundIntro:
             self.soundIntro = True
             duration = self.sound.play(self.assets.music_highScoreLead)
-            self.interrupter.delayed_music_on(wait=duration,song=self.assets.music_goldmineMultiball)
+            self.interrupter.delayed_music_on(wait=duration,song=self.assets.music_goldmineMultiball)'''
 
     def highscore_banner_complete(self, banner_mode, highscore_entry_mode):
-        self.modes.remove(banner_mode)
-        highscore_entry_mode.prompt()
+        '''self.modes.remove(banner_mode)
+        highscore_entry_mode.prompt()'''
 
     def highscore_entry_finished(self, mode):
-        self.modes.remove(mode)
+        '''self.modes.remove(mode)
         # Stop the music
         self.sound.stop_music()
         # turn off the sound intro flag
@@ -714,12 +582,12 @@ class CCGame(game.BasicGame):
         duration = self.sound.play(self.assets.quote_goodbye)
 
         # play the closing song
-        self.interrupter.closing_song(duration)
+        self.interrupter.closing_song(duration)'''
 
     def setup_ball_search(self):
         # No special handlers in starter game.
         special_handler_modes = []
-        self.ball_search = cc_modes.BallSearch(self, priority=100,countdown_time=15, coils=self.ballsearch_coils,reset_switches=self.ballsearch_resetSwitches,stop_switches=self.ballsearch_stopSwitches,special_handler_modes=special_handler_modes)
+        self.ball_search = id4Modes.BallSearch(self, priority=100,countdown_time=15, coils=self.ballsearch_coils,reset_switches=self.ballsearch_resetSwitches,stop_switches=self.ballsearch_stopSwitches,special_handler_modes=special_handler_modes)
 
     def schedule_lampshows(self,lampshows,repeat=True):
         self.scheduled_lampshows = lampshows
@@ -745,13 +613,7 @@ class CCGame(game.BasicGame):
     def set_status(self,derp):
         self.status = derp
 
-    ###  _____               _    _
-    ### |_   _| __ __ _  ___| | _(_)_ __   __ _
-    ###   | || '__/ _` |/ __| |/ / | '_ \ / _` |
-    ###   | || | | (_| | (__|   <| | | | | (_| |
-    ###   |_||_|  \__,_|\___|_|\_\_|_| |_|\__, |
-    ###                                   |___/
-    ### Player stats and progress tracking
+    '''### Player stats and progress tracking
 
     def set_tracking(self,item,amount,key="foo"):
         p = self.current_player()
@@ -840,7 +702,7 @@ class CCGame(game.BasicGame):
 
     def calc_number_average(self, prev_total, prev_x, new_value):
         avg_game_time = int((prev_total * prev_x) + new_value) / (prev_total + 1)
-        return int(avg_game_time)
+        return int(avg_game_time)'''
 
     ### Standard flippers
     def enable_flippers(self, enable):
@@ -872,75 +734,21 @@ class CCGame(game.BasicGame):
 
         self.enable_bumpers(enable)
 
-    ### Flipper inversion
-
-    def enable_inverted_flippers(self, enable):
-        """Enables or disables the flippers AND bumpers."""
-
-        print "ENABLE INVERTED FLIPPERS, YO"
-        for flipper in self.config['PRFlippers']:
-
-            ## add the invert value
-            if flipper == 'flipperLwL':
-                inverted = 'flipperLwR'
-            if flipper == 'flipperLwR':
-                inverted = 'flipperLwL'
-
-            self.logger.info("Programming inverted flipper %s", flipper)
-            main_coil = self.coils[inverted+'Main']
-            self.logger.info("Enabling WPC style flipper")
-            hold_coil = self.coils[inverted+'Hold']
-            switch_num = self.switches[flipper].number
-
-            drivers = []
-            if enable:
-                drivers += [pinproc.driver_state_pulse(main_coil.state(), self.flipperPulse)]
-                drivers += [pinproc.driver_state_pulse(hold_coil.state(), 0)]
-            self.proc.switch_update_rule(switch_num, 'closed_nondebounced', {'notifyHost':False, 'reloadActive':False}, drivers, len(drivers) > 0)
-
-            drivers = []
-            if enable:
-                drivers += [pinproc.driver_state_disable(main_coil.state())]
-                drivers += [pinproc.driver_state_disable(hold_coil.state())]
-
-            self.proc.switch_update_rule(switch_num, 'open_nondebounced', {'notifyHost':False, 'reloadActive':False}, drivers, len(drivers) > 0)
-
-            if not enable:
-                main_coil.disable()
-                hold_coil.disable()
-
-        self.enable_bumpers(enable)
-
-    def enable_bottom_bumper(self, enable):
-        # For toggling off the bottom jet bumper upon request
-        switch_num = self.switches['bottomJetBumper'].number
-        coil = self.coils['bottomJetBumper']
-
-        drivers = []
-        if enable:
-            print "Enabling bottom bumper"
-            drivers += [pinproc.driver_state_pulse(coil.state(), coil.default_pulse_time)]
-        self.proc.switch_update_rule(switch_num, 'closed_nondebounced', {'notifyHost':False, 'reloadActive':True}, drivers, False)
-
-        if not enable:
-            print "Disabling bottom bumper"
-            coil.disable()
-
     ## GI LAMPS
 
     def gi_control(self,state):
-        if state == "OFF":
+       ''' if state == "OFF":
             self.giState = "OFF"
             for lamp in self.giLamps:
                 lamp.disable()
         else:
             self.giState = "ON"
             for lamp in self.giLamps:
-                lamp.enable()
+                lamp.enable()'''
 
 
     def lightning(self,section):
-        # set which section of the GI to flash
+        '''# set which section of the GI to flash
         if section == 'top':
             lamp = self.giLamps[0]
         elif section == 'right':
@@ -950,7 +758,7 @@ class CCGame(game.BasicGame):
         else:
             pass
         # then flash it
-        lamp.pulse(216)
+        lamp.pulse(216)'''
 
     # controls for music volume
 
@@ -967,7 +775,7 @@ class CCGame(game.BasicGame):
             pygame.mixer.music.set_volume(self.previousVolume)
 
     def music_on(self,song=None,caller="Not Specified",slice=0,execute=True):
-    # if given a slice number to check - do that
+    '''# if given a slice number to check - do that
         if slice != 0:
             stackLevel = self.show_tracking('stackLevel')
             # if there are balls in play and nothing active above the set slice, then kill the music
@@ -986,12 +794,12 @@ class CCGame(game.BasicGame):
             else:
                 print str(caller) + " restarting current song"
                 # then start it up
-            self.sound.play_music(self.current_music, loops=-1)
+            self.sound.play_music(self.current_music, loops=-1)'''
 
 
     # switch blocker load and unload - checks to be sure if it should do what it is told
     def switch_blocker(self,function,caller):
-        if function == 'add':
+        '''if function == 'add':
             print "Switch Blocker Add Call from " + str(caller)
             if self.switch_block not in self.modes:
                 print "Switch Blocker Added"
@@ -1006,10 +814,10 @@ class CCGame(game.BasicGame):
                 self.modes.remove(self.switch_block)
             else:
                 print "Switch Blocker NOT removed due to stack level"
-                pass
+                pass'''
 
     def volume_up(self):
-        """ """
+       ''' """ """
         if not self.sound.enabled: return
         #print "Current Volume: " + str(self.sound.volume)
         setting = self.user_settings['Sound']['Initial volume']
@@ -1019,10 +827,10 @@ class CCGame(game.BasicGame):
             self.sound.set_volume(setting / 10.0)
             #print "10 value: " + str(self.sound.volume*10)
             #print "Int value: " + str(int(self.sound.volume*10))
-        return setting
+        return setting'''
 
     def volume_down(self):
-        """ """
+       ''' """ """
         if not self.sound.enabled: return
         #print "Current Volume: " + str(self.sound.volume)
         setting = self.user_settings['Sound']['Initial volume']
@@ -1032,17 +840,7 @@ class CCGame(game.BasicGame):
             self.sound.set_volume(setting / 10.0)
             #print "10 value: " + str(self.sound.volume*10)
             #print "Int value: " + str(int(self.sound.volume*10))
-        return setting
-
-
-    def order_mobs(self):
-        # set which mob mode comes first
-        mobSetting = "Ambush" == self.user_settings['Gameplay (Feature)']['Ambush or Showdown First']
-        if mobSetting:
-            print "User settings put Ambush first - adjusting for player"
-            self.set_tracking('ambushStatus',"OPEN")
-            self.set_tracking('showdownStatus',"OVER")
-
+        return setting'''
 
     def load_settings(self, template_filename, user_filename,restore=False):
         """Loads the YAML game settings configuration file.  The game settings
@@ -1087,7 +885,7 @@ class CCGame(game.BasicGame):
 
 
     def save_settings(self):
-        super(CCGame,self).save_settings(user_settings_path)
+        super(id4Game,self).save_settings(user_settings_path)
 
     def remote_load_settings(self,restore=False):
         self.load_settings(settings_defaults_path, user_settings_path,restore)
@@ -1129,5 +927,5 @@ class CCGame(game.BasicGame):
         self.load_game_data(game_data_defaults_path, user_game_data_path,restore)
 
     def save_game_data(self):
-        super(CCGame, self).save_game_data(user_game_data_path)
+        super(id4Game, self).save_game_data(user_game_data_path)
 
