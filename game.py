@@ -229,29 +229,11 @@ class id4Game(game.BasicGame):
         #self.modes.add(self.switch_tracker)
         #self.modes.add(self.score_display)
 
-    def start_game(self,forceMoonlight=False):
-        '''# Check the time
-        now = datetime.datetime.now()
-        print "Hour: " + str(now.hour) + " Minutes: " + str(now.minute)
-        # subtract the window minutes from 60
-        window = 60 - self.moonlightMinutes
-        print "Moonlight window time: " + str(window)
-        # check for moonlight - always works at straight up midnight
-        if now.hour == 0 & now.minute == 0:
-            self.moonlightFlag = True
-        # If not exactly midnight - check to see if we're within the time window
-        elif now.hour == 23 & now.minute >= window:
-            self.moonlightFlag = True
-        # if force was passed - start it no matter what
-        elif forceMoonlight:
-            self.moonlightFlag = True
-        else:
-            self.moonlightFlag = False'''
-
+    def start_game(self):
         # remove the attract mode
         self.modes.remove(self.attract_mode)
         # kill the attract mode song fade delay just in case
-        self.interrupter.cancel_delayed("Attract Fade")
+        #self.interrupter.cancel_delayed("Attract Fade")
         # tick up the audits
         #self.game_data['Audits']['Games Started'] += 1
         # tick up all the switch hit tracking by one
@@ -266,7 +248,7 @@ class id4Game(game.BasicGame):
         super(id4Game,self).start_game()
         # Add the first player
         self.add_player()
-        self.order_mobs()
+        #self.order_mobs()
         # reset the music volume
         self.volume_to_set = (self.user_settings['Sound']['Initial volume'] / 10.0)
         self.sound.set_volume(self.volume_to_set)
@@ -282,8 +264,8 @@ class id4Game(game.BasicGame):
         self.trough.balls_to_autoplunge = 0
         # run the start_ball from proc.game.BasicGame
         super(id4Game, self).start_ball()
-        if len(self.players) > 1 and not self.interrupter.hush:
-            self.interrupter.display_player_number()
+        #if len(self.players) > 1 and not self.interrupter.hush:
+        #    self.interrupter.display_player_number()
 
     def create_player(self,name):
         # create an object wiht the Tracking Class - subclassed off game.Player
