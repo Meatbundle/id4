@@ -163,86 +163,33 @@ class id4Game(game.BasicGame):
 
         for category in self.highscore_categories:
             category.load_from_game(self)
-'''
+        '''
         #Initialize all of the modes
-
-        # Create the objects for the basic modes
-        '''self.lamp_control = cc_modes.LampControl(game=self,priority=4)
+        #Create the objects for the basic modes
+        self.attract = id4Modes.Attract(game=self,priority=4)
+        '''
         self.base = cc_modes.BaseGameMode(game=self,priority=4)
-        self.attract_mode = cc_modes.Attract(game=self,priority=5)
-        self.train = cc_modes.Train(game=self,priority=6)
-        self.mountain = cc_modes.Mountain(game=self,priority = 7)
-        self.badge = cc_modes.Badge(game=self,priority = 7)
-        # the gun modes
-        self.quickdraw = cc_modes.Quickdraw(game=self,priority=9)
-        self.gunfight = cc_modes.Gunfight(game=self,priority=9)
+        
         # basic ramp & loop handling
         self.right_ramp = cc_modes.RightRamp(game=self,priority=10)
         self.left_ramp = cc_modes.LeftRamp(game=self,priority=10)
         self.center_ramp = cc_modes.CenterRamp(game=self,priority=10)
         self.left_loop = cc_modes.LeftLoop(game=self,priority=10)
         self.right_loop = cc_modes.RightLoop(game=self,priority=10)
-        # this is the layer that prevents basic ramp/loop shots from registering
-        self.switch_block = cc_modes.SwitchBlock(game=self,priority=11)
         # combos should always register - so they ride above the switch block
         self.combos = cc_modes.Combos(game=self,priority=14)
 
-        # save polly modes
-        self.save_polly = cc_modes.SavePolly(game=self,priority=15)
-        self.river_chase = cc_modes.RiverChase(game=self,priority=15)
-        self.bank_robbery = cc_modes.BankRobbery(game=self,priority=15)
-        # drunk multiball
-        self.drunk_multiball = cc_modes.DrunkMultiball(game=self,priority=16)
+        
 
         self.bonus_lanes = cc_modes.BonusLanes(game=self,priority=17)
 
         self.match = cc_modes.Match(game=self,priority=20)
-
-        # mine and saloon have to stay high so they can interrupt other displays
-        self.mine = cc_modes.Mine(game=self,priority=24)
-        self.saloon = cc_modes.Saloon(game=self,priority=25)
-        self.bart = cc_modes.Bart(game=self,priority=25)
-
-
-        # general bad guy handling
-        self.bad_guys = cc_modes.BadGuys(game=self,priority=67)
-        # stampede multiball
-        self.stampede = cc_modes.Stampede(game=self,priority=69)
-        # this mode unloads when not in use
-        self.skill_shot = cc_modes.SkillShot(game=self,priority=70)
-        # gold mine multiball
-        self.gm_multiball = cc_modes.GoldMine(game=self,priority=75)
-        # the mob gun modes so they ride in front of most things
-        self.showdown = cc_modes.Showdown(game=self,priority=80)
-        self.ambush = cc_modes.Ambush(game=self,priority=80)
-
-        # cva
-        self.cva = cc_modes.CvA(game=self,priority=85)
-        # marhsall multiball
-        self.marshall_multiball = cc_modes.MarshallMultiball(game=self,priority=85)
-        # bionic bart
-        self.bionic = cc_modes.BionicBart(game=self,priority=90)
-        # High Noon
-        self.high_noon = cc_modes.HighNoon(game=self,priority=90)
-        # move your train
-        self.move_your_train = cc_modes.MoveYourTrain(game=self,priority=90)
-        # last call
-        self.last_call = cc_modes.LastCall(game=self,priority=90)
-        # skillshot switch filter
-        self.super_filter = cc_modes.SuperFilter(game=self,priority = 200)
-        # Interrupter Jones
-        self.interrupter = cc_modes.Interrupter(game=self,priority=200)
-        # moonlight madness
-        self.moonlight = cc_modes.Moonlight(game=self,priority=200)
-        # Switch Hit Tracker - Rides above everything else
-        self.switch_tracker = cc_modes.SwitchTracker(game=self,priority=250)
-        # new service mode test
-        self.new_service = ep.ep_new_service.NewServiceMode(game=self,priority=200)
-
+        '''
         # set up an array of the modes
         # this subset is used for clearing displays on command
-        self.ep_modes = [self.base,
-                         self.attract_mode,
+        self.id4Modes = [self.attract}
+        '''
+                         self.base,
                          self.right_ramp,
                          self.right_loop,
                          self.center_ramp,
@@ -272,20 +219,15 @@ class id4Game(game.BasicGame):
                          self.cva,
                          self.marshall_multiball,
                          self.moonlight]
-
-        self.ep_modes.sort(lambda x, y: y.priority - x.priority)
-
+'''
+        self.id4Modes.sort(lambda x, y: y.priority - x.priority)
         # Add in the base modes that are active at start
-        self.modes.add(self.lamp_control)
-        self.modes.add(self.trough)
-        self.modes.add(self.ball_search)
-        self.modes.add(self.attract_mode)
-        self.modes.add(self.train)
-        self.modes.add(self.mountain)
-        self.modes.add(self.badge)
-        self.modes.add(self.interrupter)
-        self.modes.add(self.switch_tracker)
-        self.modes.add(self.score_display)'''
+        #self.modes.add(self.lamp_control)
+        #self.modes.add(self.trough)
+        #self.modes.add(self.ball_search)
+        self.modes.add(self.attract)
+        #self.modes.add(self.switch_tracker)
+        #self.modes.add(self.score_display)
 
     def start_game(self,forceMoonlight=False):
         '''# Check the time
