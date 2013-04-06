@@ -1,0 +1,3 @@
+import procgame
+
+class Attract()
