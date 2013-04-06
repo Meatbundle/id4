@@ -1,4 +1,3 @@
-
 from procgame import dmd
 import meat
 import locale
@@ -209,7 +208,7 @@ class Attract(meat.MeatMode):
             random.shuffle(self.game.sound.sounds[key])
         self.game.sound.sounds[key][0].play(loops,max_time,fade_ms)
         return self.game.sound.sounds[key][0].get_length()
-
+'''
     def mode_topmost(self):
         pass
 
@@ -219,7 +218,7 @@ class Attract(meat.MeatMode):
     def mode_tick(self):
         # count down
         pass
-'''
+
     def sw_exit_active(self, sw):
         return True
 
@@ -246,11 +245,7 @@ class Attract(meat.MeatMode):
                     self.game.interrupter.clear_layer()
                     self.game.interrupter.wipe_delays()
                     # Initialize game
-                    if self.game.switches.flipperLwL.is_active():
-                        force = True
-                    else:
-                        force = False
-                    self.game.start_game(forceMoonlight=force)
+                    self.game.start_game()
                 else:
                     print "BALL SEARCH"
                     self.game.ball_search.perform_search(1)
@@ -408,7 +403,4 @@ class Attract(meat.MeatMode):
 '''
 
     def mode_stopped(self):
-        print "DELETING ATTRACT DELAYS"
-        #self.wipe_delays()
-        # rese the noisy flag
-        #self.noisy = True
+        pass
