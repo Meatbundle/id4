@@ -1,0 +1,316 @@
+# P-ROC Game Description file for Sega Independence Day
+PRGame:
+    machineType: sternWhitestar
+    numBalls: 4
+PRFlippers:
+    - flipperLwR
+    - flipperLwL
+PRBumpers:
+    - slingL
+    - slingR
+    - popL
+    - popT
+    - popB
+PRSwitches:
+    flipperLwL:
+        number: SD1
+    flipperLwR:
+        number: SD3
+    left:
+        number: SD6
+    right:
+        number: SD7
+    enter:
+        number: SD8
+    fourthCoinSlot:
+        number: S02
+    sixthCoinSlot:
+        number: S03
+    rightCoinSlot:
+        number: S04
+    centerCoinSlot:
+        number: S05
+    leftCoinSlot:
+        number: S06
+    fifthCoinSlot:
+        number: S07
+    miniLoop:
+        number: S09
+    trough1:
+        number: S11
+    trough2:
+        number: S12
+    trough3:
+        number: S13
+    trough4:
+        number: S14
+    troughVUKOpto:
+        number: S15
+    shooterLane:
+        number: S16
+    leftRampEnter:
+        number: S18
+    leftRampExit:
+        number: S19
+    centerRampEnter:
+        number: S20
+    centerRampExit:
+        number: S21
+    rightRampEnter:
+        number: S22
+    rightRampExit:
+        number: S23
+    superJackpotStandup:
+        number: S24
+    miniLoopSU:
+        number: S25
+    centerRampSU:
+        number: S27
+    rightRampSUL:
+        number: S28
+    rightRampSUR:
+        number: S29
+    iRollover:
+        number: S30
+    dRollover:
+        number: S31
+    fourRollover:
+        number: S32
+    a51Top:
+        number: S33
+    a51Mid:
+        number: S34
+    hurryTop:
+        number: S35
+    hurryMid:
+        number: S36
+    leftOrbBottom:
+        number: S37
+    leftOrbTop:
+        number: S38
+    rightOrbTop:
+        number: S39
+    rightOrbBottom:
+        number: S40
+    vukSideEnter:
+        number: S41
+    alienHeadOpto:
+        number: S42
+    headRear:
+        number: S43
+    vuk:
+        number: S44
+    vukFrontEnter:
+        number: S45
+    headFront:
+        number: S46
+    a51Bottom:
+        number: S47
+    hurryBottom:
+        number: S48
+    popL:
+        number: S49
+    popB:
+        number: S50
+    popT:
+        number: S51
+    servo:
+        number: S52
+    launchButton:
+        number: S53
+    startButton:
+        number: S54
+    slamTilt:
+        number: S55
+    tilt:
+        number: S56
+    outlaneL:
+        number: S57
+    inlaneL:
+        number: S58
+    slingL:
+        number: S59
+    outlaneR:
+        number: S60
+    inlaneR:
+        number: S61
+    slingR:
+        number: S62
+PRCoils:
+    trough:
+        number: C01
+    autoLaunch:
+        number: C02
+    vuk:
+        number: C03
+    bottomLeftFlashers:
+        number: C06
+    topLeftFlashers:
+        number: C07
+    popL:
+        number: C09
+    popB:
+        number: C10
+    popT:
+        number: C11
+    slingL:
+        number: C12
+    slingR:
+        number: C13
+    flipperLwLMain:
+        number: C15
+    flipperLwRMain:
+        number: C16
+    troughLock:
+        number: C17
+    leftControlGate:
+        number: C19
+    rightControlGate:
+        number: C20
+    infectionFlasher:
+        number: C23
+    alienHeadFlasher:
+        number: C25
+    backRightFlasher:
+        number: C26
+    flasherTopPF:
+        number: C27
+    flashShip1Pops1:
+        number: C28
+    flashShip1Pops2:
+        number: C29
+    flasherPops1:
+        number: C30
+    flasherLeftRamp:
+        number: C31
+    flasherUpperFlipper:
+        number: C32
+PRLamps:
+    x2:
+        number: L01
+    x4:
+        number: L02
+    x10:
+        number: L03
+    x6:
+        number: L04
+    x8:
+        number: L05
+    releaseDestLeft:
+        number: L06
+    releaseDestRight:
+        number: L07
+    holdBonus:
+        number: L08
+    releaseAttackLeft:
+        number: L09
+    releaseAttackRight:
+        number: L10
+    specialL:
+        number: L11
+    lightComboL:
+        number: L12
+    lightComboR:
+        number: L13
+    specialR:
+        number: L14
+    alienScan:
+        number: L15
+    infection:
+        number: L16
+    a51bottom:
+        number: L17
+    a51mid:
+        number: L18
+    a51top:
+        number: L19
+    ramp10mL:
+        number: L20
+    ramp20mL:
+        number: L21
+    rampArrowL:
+        number: L22
+    f18hurry:
+        number: L23
+    orbitArrowL:
+        number: L24
+    lock1:
+        number: L25
+    lock2:
+        number: L26
+    lock3:
+        number: L27
+    increaseJackpot:
+        number: L28
+    hurryBottom:
+        number: L29
+    hurryMid:
+        number: L30
+    hurryTop:
+        number: L31
+    russell:
+        number: L32
+    ramp10mR:
+        number: L33
+    ramp20mR:
+        number: L34
+    rampArrowR:
+        number: L35
+    miniLoopArrow:
+        number: L36
+    a51Arrow:
+        number: L37
+    superJackpot:
+        number: L38
+    miniLoopSU:
+        number: L39
+    combo:
+        number: L41
+    alienHeadCircle:
+        number: L42
+    centerRampSU:
+        number: L43
+    rightRampSUL:
+        number: L44
+    rightRampSUR:
+        number: L45
+    extraBall:
+        number: L46
+    centerRampArrow:
+        number: L47
+    orbitArrowR:
+        number: L48
+    popL:
+        number: L49
+    popB:
+        number: L50
+    popT:
+        number: L51
+    iLane:
+        number: L52
+    dLane:
+        number: L53
+    fourLane:
+        number: L54
+    flipperL1:
+        number: L55
+    flipperR1:
+        number: L56
+    alienEyes:
+        number: L57
+    shootAgain:
+        number: L58
+    flipperL2:
+        number: L59
+    flipperL3:
+        number: L60
+    flipperR2:
+        number: L61
+    releaseDestMid:
+        number: L62
+    flipperR3:
+        number: L63
+    launchButton:
+        number: L64
+    releaseAttackMid:
+        number: L65 
