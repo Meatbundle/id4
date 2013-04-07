@@ -11,83 +11,12 @@ class Attract(meat.MeatMode):
    """Independence Day Attract Mode"""
     def __init__(self, game, priority):
         super(Attract, self).__init__(game, priority)
-        self.myID = "Attract"
-        self.timer = 3
-        self.NOISY_COUNT = self.game.user_settings['Gameplay (Feature)']['Attract sounds to play']
-        self.NOISY_DELAY = self.game.user_settings['Gameplay (Feature)']['Attract sound delay time']
-        self.flipperOK = True
-        self.slowFlipper = self.game.user_settings['Machine (Standard)']['Slow Attract Pages'] == 'Enabled'
+        #setup animation and text layers for attract mode
 
     def mode_started(self):
-
-        # show the switch warning on the interrupter level if any switch hits the warning limit
-        warn = self.game.user_settings['Machine (Standard)']['Inactive Switch Warning']
-        bad_switches = []
-        for switch in self.game.game_data['SwitchHits']:
-            # if any switch is up to the warning level
-            if self.game.game_data['SwitchHits'][switch] >= warn:
-                # add it to the list of warning swtiches
-                bad_switches.append({'switchName':switch,'count':self.game.game_data['SwitchHits'][switch]})
-        # if we get here and there's something in bad switches, it's time to act
-        if bad_switches:
-            self.game.interrupter.switch_warning(bad_switches)
-'''
-        ## Set up the layers to use
-        ballyBanner = dmd.FrameLayer(opaque=False, frame=self.game.assets.dmd_ballyBanner.frames[0])
-
-        textLayer1 = ep.EP_TextLayer(76, 5, self.game.assets.font_10px_AZ, "center", opaque=False).set_text("ORIGINALLY",color=ep.YELLOW)
-        textLayer1.composite_op = "blacksrc"
-        textLayer2 = dmd.TextLayer(76, 18, self.game.assets.font_10px_AZ, "center", opaque=False).set_text("BY")
-        textLayer2.composite_op = "blacksrc"
-        leftGecko = dmd.FrameLayer(opaque=False, frame=self.game.assets.dmd_geckoBorderLeft.frames[0])
-        original = dmd.GroupedLayer(128, 32, [leftGecko, textLayer1,textLayer2])
-
-        textLayer1 = ep.EP_TextLayer(58, 5, self.game.assets.font_10px_AZ, "center", opaque=False).set_text("CONTINUED",color=ep.ORANGE)
-        textLayer1.composite_op = "blacksrc"
-        textLayer2 = dmd.TextLayer(58, 18, self.game.assets.font_10px_AZ, "center", opaque=False).set_text("WITH")
-        textLayer2.composite_op = "blacksrc"
-        rightGecko = dmd.FrameLayer(opaque=False, frame=self.game.assets.dmd_geckoBorderRight.frames[0])
-        expanded = dmd.GroupedLayer(128, 32, [rightGecko, textLayer1,textLayer2])
-
-        proc_banner = dmd.FrameLayer(opaque=False, frame=self.game.assets.dmd_procBanner.frames[0])
-
-        self.splash = dmd.FrameLayer(opaque=False, frame=self.game.assets.dmd_ccBanner.frames[0])
-        continuedBanner = dmd.FrameLayer(opaque=False, frame=self.game.assets.dmd_cccBanner.frames[0])
-        self.myIndex = 0
-
-
-        # adding a blank layer
-        blanker = self.game.score_display.layer
-
-
-        self.layers = [ {'layer':blanker,'type':ep.EP_Transition.TYPE_PUSH,'direction':ep.EP_Transition.PARAM_NORTH},
-                        {'layer':self.splash,'type':ep.EP_Transition.TYPE_PUSH,'direction':ep.EP_Transition.PARAM_WEST},
-                        #{'layer':continuedBanner,'type':ep.EP_Transition.TYPE_WIPE,'direction':ep.EP_Transition.PARAM_EAST},
-                        {'layer':continuedBanner,'type':"NONE",'direction':"DERP"},
-                        {'layer':original,'type':ep.EP_Transition.TYPE_PUSH,'direction':ep.EP_Transition.PARAM_EAST},
-                        {'layer':ballyBanner,'type':ep.EP_Transition.TYPE_CROSSFADE, 'direction':False},
-                        {'layer':expanded,'type':ep.EP_Transition.TYPE_PUSH,'direction':ep.EP_Transition.PARAM_WEST},
-                        {'layer':proc_banner,'type':ep.EP_Transition.TYPE_CROSSFADE,'direction':False}]
-
-        self.generate_score_frames()
-
-        # add a game over at the end
-        gameOver = self.game.showcase.make_thin_string(3,text="GAME OVER")
-        self.layers.append({'layer':gameOver,'type':ep.EP_Transition.TYPE_CROSSFADE,'direction':False})
-
-        # Blink the start button to notify player about starting a game.
-        self.game.lamps.startButton.schedule(schedule=0x00ff00ff)
-'''
         # Turn on the GIs
         self.game.gi_control("ON")
-'''
-        # flag for if the flippers should make noise or not
-        self.noisy = True
-        # number of sounds played
-        self.soundCount = 0
-
-
-
+        '''
         ## lampshows for attract mode
         lampshows = [
             self.game.assets.lamp_topToBottom,
@@ -216,7 +145,6 @@ class Attract(meat.MeatMode):
         pass
 
     def mode_tick(self):
-        # count down
         pass
 
     def sw_exit_active(self, sw):
@@ -241,14 +169,28 @@ class Attract(meat.MeatMode):
                     self.game.lampctrl.stop_show()
                     # kill the music in case the 'end of game' song is playing
                     self.stop_music()
-                    # clear the interrupter layer
-                    self.game.interrupter.clear_layer()
-                    self.game.interrupter.wipe_delays()
                     # Initialize game
                     self.game.start_game()
                 else:
                     print "BALL SEARCH"
                     self.game.ball_search.perform_search(1)
+            
+	 def sw_enter_active(self, sw):
+	 	  for lamp in self.game.lamps:
+	 	  		lamp.disable()
+	 	  self.game.modes.add(self.game.service)
+	 	  return true
+	 	  
+	 def sw_down_active(self, sw):
+	 	  volume = self.game.sound.volume_down()
+	 	  print ("Volume Down : " + str(volume))
+	 	  return true
+	 	  
+	 def sw_up_active(self, sw):
+	 	  volume = self.game.sound.volume_up()
+	 	  print("Volume Up : " + str(volume))
+	 	  return true
+	 	  
 '''
     def generate_score_frames(self):
         # This big mess generates frames for the attract loop based on high score data.
