@@ -181,12 +181,12 @@ class Attract(meat.MeatMode):
 	 	  self.game.modes.add(self.game.service)
 	 	  return true
 	 	  
-	 def sw_down_active(self, sw):
+	 def sw_left_active(self, sw):
 	 	  volume = self.game.sound.volume_down()
 	 	  print ("Volume Down : " + str(volume))
 	 	  return true
 	 	  
-	 def sw_up_active(self, sw):
+	 def sw_right_active(self, sw):
 	 	  volume = self.game.sound.volume_up()
 	 	  print("Volume Up : " + str(volume))
 	 	  return true
