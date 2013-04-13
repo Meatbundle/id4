@@ -8,7 +8,7 @@
 #logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
 from procgame import *
-from id4Modes import *
+import id4Modes
 import pinproc
 #import tracking
 #from assets import *

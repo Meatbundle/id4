@@ -8,7 +8,7 @@ import sys
 locale.setlocale(locale.LC_ALL, "")
 
 class Attract(meat.MeatMode):
-   """Independence Day Attract Mode"""
+    """Independence Day Attract Mode"""
     def __init__(self, game, priority):
         super(Attract, self).__init__(game, priority)
         #setup animation and text layers for attract mode
@@ -98,7 +98,7 @@ class Attract(meat.MeatMode):
     def sw_flipperLwR_active(self,sw):
         if self.flipperOK:
             self.flipper_action()
-'''
+    '''
     def flipper_action(self):
         if self.slowFlipper:
             self.flipperOK = False
@@ -137,7 +137,8 @@ class Attract(meat.MeatMode):
             random.shuffle(self.game.sound.sounds[key])
         self.game.sound.sounds[key][0].play(loops,max_time,fade_ms)
         return self.game.sound.sounds[key][0].get_length()
-'''
+    '''
+        
     def mode_topmost(self):
         pass
 
@@ -174,24 +175,24 @@ class Attract(meat.MeatMode):
                 else:
                     print "BALL SEARCH"
                     self.game.ball_search.perform_search(1)
-            
-	 def sw_enter_active(self, sw):
+
+	def sw_enter_active(self, sw):
 	 	  for lamp in self.game.lamps:
 	 	  		lamp.disable()
 	 	  self.game.modes.add(self.game.service)
 	 	  return true
 	 	  
-	 def sw_left_active(self, sw):
+	def sw_left_active(self, sw):
 	 	  volume = self.game.sound.volume_down()
 	 	  print ("Volume Down : " + str(volume))
 	 	  return true
 	 	  
-	 def sw_right_active(self, sw):
+	def sw_right_active(self, sw):
 	 	  volume = self.game.sound.volume_up()
 	 	  print("Volume Up : " + str(volume))
 	 	  return true
 	 	  
-'''
+    '''
     def generate_score_frames(self):
         # This big mess generates frames for the attract loop based on high score data.
         # Read the categories
@@ -342,7 +343,7 @@ class Attract(meat.MeatMode):
                     scoreLine1.composite_op = "blacksrc"
                     combined = dmd.GroupedLayer(128,32,[backdrop,title,initLine1,scoreLine1])
                     self.layers.append({'layer':combined, 'type':ep.EP_Transition.TYPE_CROSSFADE,'direction':False})
-'''
+    '''
 
     def mode_stopped(self):
         pass
