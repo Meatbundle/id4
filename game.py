@@ -8,7 +8,7 @@
 #logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
 from procgame import *
-import id4Modes
+from id4Modes import *
 import pinproc
 #import tracking
 #from assets import *
@@ -187,7 +187,7 @@ class id4Game(game.BasicGame):
         '''
         # set up an array of the modes
         # this subset is used for clearing displays on command
-        self.id4Modes = [self.attract}
+        self.id4Modes = [self.attract]
         '''
                          self.base,
                          self.right_ramp,
@@ -270,6 +270,7 @@ class id4Game(game.BasicGame):
     def create_player(self,name):
         # create an object wiht the Tracking Class - subclassed off game.Player
         #return tracking.Tracking(name)
+        pass
 
     def game_started(self):
         self.log("GAME STARTED")
@@ -279,6 +280,7 @@ class id4Game(game.BasicGame):
 
     def shoot_again(self):
         #self.interrupter.shoot_again()
+        pass
 
     def ball_starting(self):
         # restore music, just in case
@@ -459,7 +461,7 @@ class id4Game(game.BasicGame):
         # Remove the base mode here now instead - so that it's still available for last call
         self.modes.remove(self.base)
 
-       ''' # High Score Stuff
+        ''' # High Score Stuff
         self.seq_manager = highscore.EntrySequenceManager(game=self, priority=2)
         self.seq_manager.finished_handler = self.highscore_entry_finished
         self.seq_manager.logic = highscore.CategoryLogic(game=self, categories=self.highscore_categories)
@@ -699,7 +701,7 @@ class id4Game(game.BasicGame):
             pygame.mixer.music.set_volume(self.previousVolume)
 
     def music_on(self,song=None,caller="Not Specified",slice=0,execute=True):
-    '''# if given a slice number to check - do that
+        '''# if given a slice number to check - do that
         if slice != 0:
             stackLevel = self.show_tracking('stackLevel')
             # if there are balls in play and nothing active above the set slice, then kill the music
@@ -719,7 +721,7 @@ class id4Game(game.BasicGame):
                 print str(caller) + " restarting current song"
                 # then start it up
             self.sound.play_music(self.current_music, loops=-1)'''
-
+        pass
 
     # switch blocker load and unload - checks to be sure if it should do what it is told
     def switch_blocker(self,function,caller):
