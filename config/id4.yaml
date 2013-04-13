@@ -313,4 +313,25 @@ PRLamps:
     launchButton:
         number: L64
     releaseAttackMid:
-        number: L65 
+        number: L65
+PRBallSave:
+    pulseCoils: [autoLaunch, vuk, popL, popB, popT, leftControlGate, rightControlGate]
+    resetSwitches:
+        outlaneL: open
+        outlaneR: open
+        inlaneL: open
+        inlaneR: open
+        rightRampEnter: open
+        leftRampEnter: open
+        centerRampEnter: open
+        miniLoop: open
+        slingL: open
+        slingR: open
+        headRear: open
+        popB: open
+        vuk: open
+        vukFrontEnter: open
+    stopSwitches:
+        shooterLane: closed
+        flipperLwL: closed
+        flipperLwR: closed

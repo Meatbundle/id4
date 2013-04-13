@@ -10,9 +10,7 @@
 from procgame import *
 import id4Modes
 import pinproc
-#import tracking
 #from assets import *
-#import ep
 import pygame
 #import highscore
 import time
@@ -43,7 +41,9 @@ class id4Game(game.BasicGame):
         self.soundIntro = False
         self.shutdownFlag = config.value_for_key_path(keypath='shutdown_flag',default=False)
         self.buttonShutdown = config.value_for_key_path(keypath='power_button_combo', default=False)
-        self.moonlightFlag = False
+        self.ballsearch_coils = []
+        self.ballsearch_resetSwitches = []
+        self.ballsearch_stopSwitches = []
 
         super(id4Game, self).__init__(machineType)
         #use_desktop = config.value_for_key_path(keypath='use_desktop', default=True)
@@ -110,10 +110,6 @@ class id4Game(game.BasicGame):
 
         self.ballStarting = False
         self.status = None
-        # gi lamps set
-        self.giLamps = [self.lamps.gi01,
-                        self.lamps.gi02,
-                        self.lamps.gi03]
         # squelch flag used by audio routines to turn down music without stopping it
         #self.squelched = False
         
@@ -122,9 +118,6 @@ class id4Game(game.BasicGame):
         self.endBusy = False
 
         """docstring for setup"""
-        # load up the game data Game data
-        print "Loading game data"
-        self.load_game_data(game_data_defaults_path, user_game_data_path)
         # and settings Game settings
         print "Loading game settings"
         self.load_settings(settings_defaults_path, user_settings_path)
@@ -385,9 +378,6 @@ class id4Game(game.BasicGame):
         self.ball_time = self.get_ball_time()
         self.current_player().game_time += self.ball_time
 
-        '''self.game_data['Audits']['Avg Ball Time'] = self.calc_time_average_string(self.game_data['Audits']['Balls Played'], self.game_data['Audits']['Avg Ball Time'], self.ball_time)
-        self.game_data['Audits']['Balls Played'] += 1'''
-
         if self.current_player().extra_balls > 0:
             self.current_player().extra_balls -= 1
             #set the ball starting flag to help the trough not be SO STUPID
@@ -512,8 +502,7 @@ class id4Game(game.BasicGame):
 
     def setup_ball_search(self):
         # No special handlers in starter game.
-        special_handler_modes = []
-        self.ball_search = id4Modes.BallSearch(self, priority=100,countdown_time=15, coils=self.ballsearch_coils,reset_switches=self.ballsearch_resetSwitches,stop_switches=self.ballsearch_stopSwitches,special_handler_modes=special_handler_modes)
+        self.ball_search = id4Modes.BallSearch(self, priority=100,countdown_time=15, coils=self.ballsearch_coils,reset_switches=self.ballsearch_resetSwitches,stop_switches=self.ballsearch_stopSwitches)
 
     def schedule_lampshows(self,lampshows,repeat=True):
         self.scheduled_lampshows = lampshows
@@ -660,32 +649,6 @@ class id4Game(game.BasicGame):
 
         self.enable_bumpers(enable)
 
-    ## GI LAMPS
-
-    def gi_control(self,state):
-       ''' if state == "OFF":
-            self.giState = "OFF"
-            for lamp in self.giLamps:
-                lamp.disable()
-        else:
-            self.giState = "ON"
-            for lamp in self.giLamps:
-                lamp.enable()'''
-
-
-    def lightning(self,section):
-        '''# set which section of the GI to flash
-        if section == 'top':
-            lamp = self.giLamps[0]
-        elif section == 'right':
-            lamp = self.giLamps[1]
-        elif section == 'left':
-            lamp = self.giLamps[2]
-        else:
-            pass
-        # then flash it
-        lamp.pulse(216)'''
-
     # controls for music volume
 
     def squelch_music(self):
@@ -815,43 +778,3 @@ class id4Game(game.BasicGame):
 
     def remote_load_settings(self,restore=False):
         self.load_settings(settings_defaults_path, user_settings_path,restore)
-
-    def load_game_data(self, template_filename, user_filename,restore=None):
-        """Loads the YAML game data configuration file.  This file contains
-        transient information such as audits, high scores and other statistics.
-        The *template_filename* provides default values for the game;
-        *user_filename* contains the values set by the user.
-
-        See also: :meth:`save_game_data`
-        """
-        self.game_data = {}
-        template = yaml.load(open(template_filename, 'r'))
-        if os.path.exists(user_filename):
-            self.game_data = yaml.load(open(user_filename, 'r'))
-            # check that we got something
-            if self.game_data:
-                print "Found settings. All good"
-            else:
-                print "Data broken, all bad, defaulting"
-                self.game_data = {}
-
-        if template:
-            for key, value in template.iteritems():
-                # if we're restoring a section - copy those
-                if restore:
-                    if restore in key:
-                        self.game_data[key] = copy.deepcopy(value)
-                # if something is missing, add that
-                if key not in self.game_data:
-                       self.game_data[key] = copy.deepcopy(value)
-
-        # if we restored something, save
-        if restore:
-            self.save_game_data()
-
-    def remote_load_game_data(self,restore=None):
-        self.load_game_data(game_data_defaults_path, user_game_data_path,restore)
-
-    def save_game_data(self):
-        super(id4Game, self).save_game_data(user_game_data_path)
-

@@ -1,5 +1,5 @@
-from procgame import dmd
-import meat
+import procgame
+from procgame import *
 import locale
 import random
 import sys
@@ -7,7 +7,7 @@ import sys
 # Used to put commas in the score.
 locale.setlocale(locale.LC_ALL, "")
 
-class Attract(meat.MeatMode):
+class Attract(game.Mode):
     """Independence Day Attract Mode"""
     def __init__(self, game, priority):
         super(Attract, self).__init__(game, priority)

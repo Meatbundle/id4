@@ -34,7 +34,7 @@ def main():
 
     config = 0
     game = None
-    fakePinProc = true#(len(sys.argv) >= 1 and 'fakepinproc' in sys.argv)
+    fakePinProc = True #(len(sys.argv) >= 1 and 'fakepinproc' in sys.argv)
     #recording = (len(sys.argv) > 1 and 'record' in sys.argv)
     #playback = (len(sys.argv) > 1 and 'playback' in sys.argv)
 
