@@ -26,7 +26,7 @@ class Trough(game.Mode):
         self.position_switchnames = position_switchnames
         self.eject_switchname = eject_switchname
         self.eject_coilname = eject_coilname
-        self.shooter_lane_switchname = 'shooterLane'
+        self.shooter_lane_switchname = shooter_lane_switchname
         self.drain_callback = drain_callback
         self.eject_sw_count = 0
         self.troughStrength = self.game.user_settings['Machine (Standard)']['Trough Eject Strength']
@@ -57,7 +57,7 @@ class Trough(game.Mode):
         self.ball_save_hold = 0
 
     ## New Method - Only calling a switch count if the 4th spot activates for some reason.
-    def sw_troughBallFour_active(self,sw):
+    def sw_trough4_active(self,sw):
         if self.ignore_next_drain:
             self.ignore_next_drain = False
             print "Ignoring this drain - Early Save Switch Activated"
@@ -278,7 +278,7 @@ class Trough(game.Mode):
             self.cancel_delayed("Bounce_Delay")
             self.finish_launch()
 
-    def sw_troughEject_active(self,sw):
+    def sw_troughVUKOpto_active(self,sw):
         # tick up the count with each switch hit
         self.eject_sw_count += 1
         print "Trough Eject switch count: " + str(self.eject_sw_count)

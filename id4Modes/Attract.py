@@ -14,8 +14,6 @@ class Attract(game.Mode):
         #setup animation and text layers for attract mode
 
     def mode_started(self):
-        # Turn on the GIs
-        self.game.gi_control("ON")
         '''
         ## lampshows for attract mode
         lampshows = [
@@ -148,9 +146,6 @@ class Attract(game.Mode):
     def mode_tick(self):
         pass
 
-    def sw_exit_active(self, sw):
-        return True
-
     # Start button starts a game if the trough is full.  Otherwise it
     # initiates a ball search.
     # This is probably a good place to add logic to detect completely lost balls.
@@ -166,8 +161,6 @@ class Attract(game.Mode):
             # If the trough is full start a game - if the end of game delay isn't active
             if not self.game.endBusy:
                 if self.game.trough.is_full() or self.game.switches.shooterLane.is_active():
-                    # kill the lampshow
-                    self.game.lampctrl.stop_show()
                     # kill the music in case the 'end of game' song is playing
                     self.stop_music()
                     # Initialize game

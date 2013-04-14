@@ -46,22 +46,7 @@ class id4Game(game.BasicGame):
         self.ballsearch_stopSwitches = []
 
         super(id4Game, self).__init__(machineType)
-        #use_desktop = config.value_for_key_path(keypath='use_desktop', default=True)
-        #color_desktop = config.value_for_key_path(keypath='color_desktop', default=False)
-        ''' if use_desktop:
-            # if not color, run the old style pygame
-            if not color_desktop:
-                from procgame.desktop import Desktop
-                self.desktop = Desktop()
-            # otherwise run the color display
-            else:
-                from ep import EP_Desktop
-                self.desktop = EP_Desktop()
-                # load the images for the colorized display
-                self.desktop.load_images(dots_path)
-
-        self.load_config('cc_machine.yaml')'''
-
+        self.load_config('c:\p-roc\pyprocgame-master\games\id4\config\id4.yaml')
 
     def setup(self):
         # Instead of resetting everything here as well as when a user
@@ -141,9 +126,9 @@ class id4Game(game.BasicGame):
         self.setup_ball_search()
 
         # set up the trough mode
-        trough_switchnames = ['troughBallOne', 'troughBallTwo', 'troughBallThree', 'troughBallFour']
-        early_save_switchnames = ['rightOutlane', 'leftOutlane']
-        self.trough = id4Modes.Trough(self, trough_switchnames,'troughBallOne','troughEject', early_save_switchnames, 'shooterLane', self.ball_drained)
+        trough_switchnames = ['troug1', 'trough2', 'trough3', 'trough4']
+        early_save_switchnames = ['outlaneR', 'outlaneL']
+        self.trough = id4Modes.Trough(self, trough_switchnames,'trough1','troughVUKOpto', early_save_switchnames, self.switches.shooterLane, self.ball_drained)
         # set the ball save callback
         self.trough.ball_save_callback = self.ball_saved
 
