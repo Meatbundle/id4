@@ -335,3 +335,6 @@ PRBallSave:
         shooterLane: closed
         flipperLwL: closed
         flipperLwR: closed
+PRLampConfig:
+    maxX: 22
+    maxY: 44
