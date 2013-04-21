@@ -337,4 +337,4 @@ PRBallSave:
         flipperLwR: closed
 PRLampConfig:
     maxX: 22
-    maxY: 44
+    maxY: 46

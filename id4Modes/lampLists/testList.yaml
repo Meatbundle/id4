@@ -1,0 +1,169 @@
+test:
+  x2:
+    x: 7
+    y: 13
+  x4:
+    x: 8
+    y: 13
+  x10:
+    x: 10
+    y: 13
+  x6:
+    x: 12
+    y: 13
+  x8:
+    x: 13
+    y: 13
+  releaseDestLeft:
+    x: 6
+    y: 18
+  releaseDestRight:
+    x: 7
+    y: 18
+  holdBonus:
+    x: 10
+    y: 17
+  releaseAttackLeft:
+    x: 13
+    y: 18
+  releaseAttackRight:
+    x: 14
+    y: 18
+  specialL:
+    x: 1
+    y: 16
+  lightComboL:
+    x: 3
+    y: 16
+  lightComboR:
+    x: 16
+    y: 16
+  specialR:
+    x: 18
+    y: 16
+  alienScan:
+    x: 6
+    y: 20
+  infection:
+    x: 15
+    y: 20
+  a51bottom:
+    x: 3
+    y: 20
+  a51mid:
+    x: 4
+    y: 21
+  a51top:
+    x: 5
+    y: 22
+  ramp10mL:
+    x: 7
+    y: 23
+  ramp20mL:
+    x: 8
+    y: 24
+  rampArrowL:
+    x: 7
+    y: 25
+  f18hurry:
+    x: 4
+    y: 26
+  orbitArrowL:
+    x: 3
+    y: 27
+  lock1:
+    x: 9
+    y: 21
+  lock2:
+    x: 10
+    y: 23
+  lock3:
+    x: 11
+    y: 25
+  increaseJackpot:
+    x: 15
+    y: 24
+  hurryBottom:
+    x: 9
+    y: 27
+  hurryMid:
+    x: 9
+    y: 28
+  hurryTop:
+    x: 9
+    y: 29
+  russell:
+    x: 17
+    y: 25
+  ramp10mR:
+    x: 14
+    y: 27
+  ramp20mR:
+    x: 15
+    y: 26
+  rampArrowR:
+    x: 15
+    y: 28
+  miniLoopArrow:
+    x: 10
+    y: 31
+  a51Arrow:
+    x: 10
+    y: 31
+  superJackpot:
+    x: 8
+    y: 31
+  miniLoopSU:
+    x: 6
+    y: 37
+  combo:
+    x: 7
+    y: 33
+  alienHeadCircle:
+    x: 10
+    y: 35
+  centerRampSU:
+    x: 12
+    y: 34
+  rightRampSUL:
+    x: 15
+    y: 33
+  rightRampSUR:
+    x: 18
+    y: 31
+  extraBall:
+    x: 12
+    y: 29
+  centerRampArrow:
+    x: 13
+    y: 31
+  orbitArrowR:
+    x: 19
+    y: 33
+  popL:
+    x: 14
+    y: 39
+  popB:
+    x: 18
+    y: 38
+  popT:
+    x: 18
+    y: 41
+  iLane:
+    x: 11
+    y: 43
+  dLane:
+    x: 13
+    y: 44
+  fourLane:
+    x: 15
+    y: 45
+  shootAgain:
+    x: 10
+    y: 7
+  releaseDestMid:
+    x: 7
+    y: 17
+  releaseAttackMid:
+    x: 13
+    y: 17

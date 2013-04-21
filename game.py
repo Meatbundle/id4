@@ -52,8 +52,7 @@ class id4Game(game.BasicGame):
         # Instead of resetting everything here as well as when a user
         # initiated reset occurs, do everything in self.reset() and call it
         # now and during a user initiated reset.
-        ## This resets the color mapping so my 1 value pixels are black - even on composite - HUGE WIN!
-        self.proc.set_dmd_color_mapping([0,0,2,3,4,5,6,7,8,9,10,11,12,13,14,15])
+        self.proc.set_dmd_color_mapping([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15])
 
         self.reset()
 
@@ -145,6 +144,7 @@ class id4Game(game.BasicGame):
         #Initialize all of the modes
         #Create the objects for the basic modes
         self.attract = id4Modes.Attract(game=self,priority=4)
+        self.lightSeq = id4Modes.LightSequencer(game=self,priority=4)
         '''
         self.base = cc_modes.BaseGameMode(game=self,priority=4)
         
@@ -165,7 +165,8 @@ class id4Game(game.BasicGame):
         '''
         # set up an array of the modes
         # this subset is used for clearing displays on command
-        self.id4Modes = [self.attract]
+        self.id4Modes = [self.attract,
+                         self.lightSeq]
         '''
                          self.base,
                          self.right_ramp,
@@ -204,6 +205,7 @@ class id4Game(game.BasicGame):
         #self.modes.add(self.trough)
         #self.modes.add(self.ball_search)
         self.modes.add(self.attract)
+        self.modes.add(self.lightSeq)
         #self.modes.add(self.switch_tracker)
         #self.modes.add(self.score_display)
 
@@ -410,20 +412,6 @@ class id4Game(game.BasicGame):
         # turn the flippers off
         self.enable_flippers(enable=False)
 
-        '''# tally up the some audit data
-        # Also handle game stats.
-        for i in range(0,len(self.players)):
-            game_time = self.get_game_time(i)
-            self.game_data['Audits']['Games Played'] += 1
-            self.game_data['Audits']['Avg Game Time'] = self.calc_time_average_string( self.game_data['Audits']['Games Played'], self.game_data['Audits']['Avg Game Time'], game_time)
-            self.game_data['Audits']['Avg Score'] = self.calc_number_average( self.game_data['Audits']['Games Played'], self.game_data['Audits']['Avg Score'], self.players[i].score)
-            # rank ending choices
-            ranks = ['Stranger At End','Partner At End','Deputy At End','Sheriff At End','Marshall At End']
-            # +1 the stat for each players final rank
-            self.game_data['Feature'][ranks[self.players[i].player_stats['rank']]] += 1
-        # save the game data
-        self.save_game_data()'''
-
         # divert to the match before high score entry - unless last call is disabled
         '''lastCall = 'Enabled' == self.user_settings['Gameplay (Feature)']['Last Call Mode']
         if lastCall:
@@ -435,13 +423,6 @@ class id4Game(game.BasicGame):
     def run_highscore(self):
         # Remove the base mode here now instead - so that it's still available for last call
         self.modes.remove(self.base)
-
-        ''' # High Score Stuff
-        self.seq_manager = highscore.EntrySequenceManager(game=self, priority=2)
-        self.seq_manager.finished_handler = self.highscore_entry_finished
-        self.seq_manager.logic = highscore.CategoryLogic(game=self, categories=self.highscore_categories)
-        self.seq_manager.ready_handler = self.highscore_entry_ready_to_prompt
-        self.modes.add(self.seq_manager)'''
 
     def highscore_entry_ready_to_prompt(self, mode, prompt):
         '''banner_mode = game.Mode(game=self, priority=8)
