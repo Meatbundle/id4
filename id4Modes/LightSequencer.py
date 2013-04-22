@@ -47,7 +47,6 @@ class LightSequencer(game.Mode):
     def loadList(self, listName):
         """loads a particular lamp list given by listName"""
         self.filename = curr_file_path + "/lampLists/" + listName
-        print self.filename
         self.lamp_data = {}
         if os.path.exists(self.filename):
             self.lamp_data = yaml.load(open(self.filename, 'r'))
@@ -73,12 +72,10 @@ class LightSequencer(game.Mode):
         for key in self.lampLists:
             if key[listName]:
                 self.temp = key[listName]
+                self.temp2 = key[listName]
                 self.tempName = 'list' + str(uuid.uuid1())
                 self.tempDelay = (float(length)/self.maxY)
-                print "length: %s" %length
-                print "self.maxY: %s" %self.maxY
-                print self.tempDelay
-                self.tempEffect = Effect(self.tempName, self.temp, length, lightTime, repeat, self.tempDelay)
+                self.tempEffect = Effect(self.tempName, self.temp, self.temp2, length, lightTime, repeat, self.tempDelay)
 
                 if overwrite:
                     for x in self.sequences:                   #delete the queue
@@ -103,19 +100,17 @@ class LightSequencer(game.Mode):
 
     def TopToBottom(self, effect):
         self.counter += 1
-        #print "counter: %s" %self.counter
         tempList = list()
         if len(effect.lampListRemove) > 0 and effect.repeat == 0:
-            #print "num of lamps left: %s" %len(effect.lampListRemove)
-            for key, value in effect.lampList.iteritems():
-                for y, val in effect.lampList[key].iteritems():
+            for key, value in effect.lampListRemove.iteritems():
+                for y, val in effect.lampListRemove[key].iteritems():
                     if val > effect.point1.y:
                         tempList.append(key)
             if len(tempList) > 0:
                 for key in tempList:
-                    if key in effect.lampList:
+                    if key in effect.lampListRemove:
                         self.drawLight(key, effect, self.red)
-                        del effect.lampList[key]
+                        del effect.lampListRemove[key]
             self.runtime -=  effect.delay
             effect.point1.y -= 1
             self.delayed_name = self.delay(name= effect.name, event_type=None, delay= effect.delay, handler=self.TopToBottom, param= effect)
@@ -145,22 +140,19 @@ class LightSequencer(game.Mode):
 
     def drawLight(self, key, effect, color):
         if key in effect.lampList:
-            effect.turnOnLights[key]=[time.time()]
+            effect.lightKeys.append(LightKey(time.time(), key))
             pygame.draw.circle(self.screen, color, (effect.lampList[key]['x'] * 20, (self.maxY * 20 - effect.lampList[key]['y'] * 20)), 8, 0)
             self.recolor_name = self.delay(name=str(time.time()), event_type=None, delay=effect.lightTime/1000, handler=self.recolor, param=effect)
         pygame.display.flip()
 
     def recolor(self,effect):
-        self.temp = list()
-        for key in effect.turnOnLights:
-            self.random = effect.turnOnLights[key].values()
-            print self.random
-            self.tempTime = time.time() - float(self.random)
-            print self.tempTime
-            if time.time() - key.value() >= effect.lightTime:
+        foo = list()
+        for key in effect.lightKeys:
+            self.tempTime = float(time.time()) - float(self.random)
+            if time.time() - self.tempTime >= effect.lightTime/1000:
                 pygame.draw.circle(self.screen, self.white, (effect.lampList[key]['x'] * 20, (self.maxY * 20 - effect.lampList[key]['y'] * 20)), 8, 0)
-                self.temp.append[key]
-        for key in self.temp:
+                foo.append(key)
+        for key in foo:
             if key in effect.turnOnLights:
                 del effect.turnOnLights[key]
 
