@@ -36,7 +36,7 @@ class LightSequencer(game.Mode):
         self.white = (255,255,255)
         self.red = (255,0,0)
         self.drawLights()
-        self.play('test', 'TopToBottom', False, 2, 25, 0)
+        self.play('test', 'topToBottom', False, 2, 25, 0)
        
 
 
@@ -72,10 +72,9 @@ class LightSequencer(game.Mode):
         for key in self.lampLists:
             if key[listName]:
                 self.temp = key[listName]
-                self.temp2 = key[listName]
                 self.tempName = 'list' + str(uuid.uuid1())
                 self.tempDelay = (float(length)/self.maxY)
-                self.tempEffect = Effect(self.tempName, self.temp, self.temp2, length, lightTime, repeat, self.tempDelay)
+                self.tempEffect = Effect(self.tempName, self.temp, length, lightTime, repeat, self.tempDelay)
 
                 if overwrite:
                     for x in self.sequences:                   #delete the queue
@@ -87,9 +86,11 @@ class LightSequencer(game.Mode):
                 self.effects.append(self.tempEffect)
                 self.runtime += length * (repeat + 1)
 
-                if effect == 'TopToBottom':
+                if effect == 'topToBottom':
                     self.effects[-1].point1.y = self.maxY
-                    self.TopToBottom(self.effects[-1])
+                    self.topToBottom(self.effects[-1])
+                elif effect == 'blink':
+                    self.blink(self.effects[-1])
                 else:
                     print "Not a good effect"
                     del self.sequences[-1]
@@ -98,34 +99,58 @@ class LightSequencer(game.Mode):
             else:
                 print "No lampList found with that name"
 
-    def TopToBottom(self, effect):
-        self.counter += 1
-        tempList = list()
-        if len(effect.lampListRemove) > 0 and effect.repeat == 0:
-            for key, value in effect.lampListRemove.iteritems():
-                for y, val in effect.lampListRemove[key].iteritems():
-                    if val > effect.point1.y:
-                        tempList.append(key)
-            if len(tempList) > 0:
-                for key in tempList:
-                    if key in effect.lampListRemove:
-                        self.drawLight(key, effect, self.red)
-                        del effect.lampListRemove[key]
-            self.runtime -=  effect.delay
-            effect.point1.y -= 1
-            self.delayed_name = self.delay(name= effect.name, event_type=None, delay= effect.delay, handler=self.TopToBottom, param= effect)
-        elif len(effect.lampListRemove) <= 0 and effect.repeat > 0:                               #we finished the show, check repeat
-            effect.lampListRemove = effect.lampList
+    def topToBottom(self, effect):
+        self.counter = 0
+        #process lamps that haven't been processed yet
+        for key in effect.lampList:
+            if effect.lampList[key].processed == False:
+                self.counter += 1
+                if effect.lampList[key].y > effect.point1.y:
+                    effect.lampList[key].processed = True
+                    self.tempName = lampList[key].name
+                    self.game.tempName.pulse(effect.lightTime)
+                    self.runtime -=  effect.delay
+                    effect.point1.y -= 1
+                    self.delayed_name = self.delay(name= effect.name, event_type=None, delay= effect.delay, handler=self.topToBottom, param= effect)
+                    
+                    #remove all below on final version
+                    self.drawLight(self.tempName, effect, self.red)
+        #test to see if any lights are left and if not, do we need to repeat?
+        if self.counter == 0:                                #if true, all lamps have been processed this go around
+            for key in effect.lampList:
+                effect.lampList[key].processed = False      #reset flag
+            if effect.repeat > 0:
+                effect.repeat -= 1
+                self.topToBottom(effect)
+            else:
+                for key in self.sequences:
+                    if key ==  effect.name:
+                        self.sequences.remove(key)
+                for key in self.effects:
+                    if key ==  effect.name:
+                        self.effects.remove(key)
+
+    def blink(self, effect):
+        """blinks all the lights as many times as repeat is set to, with delay set by length"""
+        for key in effect.lampList:
+            self.tempName = effect.lampList[key].name
+            self.game.tempName.pulse(effect.lightTime)
+
+            #delete after
+            self.drawLight(self.tempName, effect, self.red)
+
+        if effect.repeat > 0:
             effect.repeat -= 1
-            self.TopToBottom(effect)
+            self.delayed_name = self.delay(name= effect.name, event_type=None, delay= effect.delay, handler=self.blink, param= effect)
         else:
             for key in self.sequences:
-                if key ==  effect.name:
-                    self.sequences.remove(key)
-            for key in self.effects:
-                if key ==  effect.name:
-                    self.effects.remove(key)
+                    if key ==  effect.name:
+                        self.sequences.remove(key)
+                for key in self.effects:
+                    if key ==  effect.name:
+                        self.effects.remove(key)
 
+    #delete this function for final build
     def drawLights(self):
         """test method to draw pattern of lights to make sure they are doing what they are supposed to"""
         self.screen = pygame.display.set_mode((self.maxX * 20, self.maxY * 20))
@@ -138,23 +163,21 @@ class LightSequencer(game.Mode):
                     pygame.draw.circle(self.screen, self.white, (lamp['x'] * 20, (self.maxY * 20 - lamp['y'] * 20)), 8, 0)
         pygame.display.flip()
 
-    def drawLight(self, key, effect, color):
-        if key in effect.lampList:
-            effect.lightKeys.append(LightKey(time.time(), key))
-            pygame.draw.circle(self.screen, color, (effect.lampList[key]['x'] * 20, (self.maxY * 20 - effect.lampList[key]['y'] * 20)), 8, 0)
-            self.recolor_name = self.delay(name=str(time.time()), event_type=None, delay=effect.lightTime/1000, handler=self.recolor, param=effect)
+    #delete this function for final build
+    def drawLight(self, Name, effect, color):
+        for key in effect.lampList:
+            if effect.lampList[key].name == Name:
+                effect.lampList[key].timestamp = time.time()
+                pygame.draw.circle(self.screen, color, (effect.lampList[key].x * 20, (self.maxY * 20 - effect.lampList[key].y * 20)), 8, 0)
+                self.recolor_name = self.delay(name=key, event_type=None, delay=effect.lightTime/1000, handler=self.recolor, param=effect)
         pygame.display.flip()
 
+        #delete this function and references for final build
     def recolor(self,effect):
-        foo = list()
-        for key in effect.lightKeys:
-            self.tempTime = float(time.time()) - float(self.random)
-            if time.time() - self.tempTime >= effect.lightTime/1000:
-                pygame.draw.circle(self.screen, self.white, (effect.lampList[key]['x'] * 20, (self.maxY * 20 - effect.lampList[key]['y'] * 20)), 8, 0)
-                foo.append(key)
-        for key in foo:
-            if key in effect.turnOnLights:
-                del effect.turnOnLights[key]
+        for key in effect.lampList:
+            if (time.time() - float(effect.lampList[key].timestamp)) >= float(effect.lightTime/1000) and effect.lampListp[key].timestamp != 0:
+                pygame.draw.circle(self.screen, self.white, (effect.lampList[key].x * 20, (self.maxY * 20 - effect.lampList[key].y * 20)), 8, 0)
+                effect.lampList[key].timestamp = 0
 
     def mode_started(self):
         pass
