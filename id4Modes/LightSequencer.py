@@ -89,6 +89,15 @@ class LightSequencer(game.Mode):
                 if effect == 'topToBottom':
                     self.effects[-1].point1.y = self.maxY
                     self.topToBottom(self.effects[-1])
+                elif effect == 'bottomToTop':
+                    self.effects[-1].point1.y = 0
+                    self.bottomToTop(self.effects[-1])
+                elif effect == 'leftToRight':
+                    self.effects[-1].point1.x = 0
+                    self.leftToRight(self.effects[-1])
+                elif effect == 'rightToLeft':
+                    self.effects[-1].point1.x = self.maxX
+                    self.rightToLeft(self.effects[-1])
                 elif effect == 'blink':
                     self.blink(self.effects[-1])
                 else:
@@ -100,6 +109,7 @@ class LightSequencer(game.Mode):
                 print "No lampList found with that name"
 
     def topToBottom(self, effect):
+        '''Starts at top of playfield and lights all lamps from top to bottom for effect.lightTime millisceonds, then repeats if required'''
         self.counter = 0
         #process lamps that haven't been processed yet
         for key in effect.lampList:
@@ -121,7 +131,107 @@ class LightSequencer(game.Mode):
                 effect.lampList[key].processed = False      #reset flag
             if effect.repeat > 0:
                 effect.repeat -= 1
+                effect.point1.y = self.maxY
                 self.topToBottom(effect)
+            else:
+                for key in self.sequences:
+                    if key ==  effect.name:
+                        self.sequences.remove(key)
+                for key in self.effects:
+                    if key ==  effect.name:
+                        self.effects.remove(key)
+
+    def bottomToTop(self, effect):
+        '''Starts at bottom of playfield and lights all lamps from bottom to top for effect.lightTime millisceonds, then repeats if required'''
+        self.counter = 0
+        #process lamps that haven't been processed yet
+        for key in effect.lampList:
+            if effect.lampList[key].processed == False:
+                self.counter += 1
+                if effect.lampList[key].y < effect.point1.y:
+                    effect.lampList[key].processed = True
+                    self.tempName = lampList[key].name
+                    self.game.tempName.pulse(effect.lightTime)
+                    self.runtime -=  effect.delay
+                    effect.point1.y += 1
+                    self.delayed_name = self.delay(name=effect.name, event_type=None, delay=effect.delay, handler=self.bottomToTop, param=effect)
+
+                    #remove all below on final version
+                    self.drawLight(self.tempName, effect, self.red)
+        #test to see if any lights are left and if not, do we need to repeat?
+        if self.counter == 0:                                #if true, all lamps have been processed this go around
+            for key in effect.lampList:
+                effect.lampList[key].processed = False      #reset flag
+            if effect.repeat > 0:
+                effect.repeat -= 1
+                effect.point1.y = 0
+                self.bottomToTop(effect)
+            else:
+                for key in self.sequences:
+                    if key ==  effect.name:
+                        self.sequences.remove(key)
+                for key in self.effects:
+                    if key ==  effect.name:
+                        self.effects.remove(key)
+
+    def leftToRight(self, effect):
+        '''lights lamps from left to right, then repeats if necessary'''
+        self.counter = 0
+        #process lamps that haven't been processed yet
+        for key in effect.lampList:
+            if effect.lampList[key].processed == False:
+                self.counter += 1
+                if effect.lampList[key].x < effect.point1.x:
+                    effect.lampList[key].processed = True
+                    self.tempName = lampList[key].name
+                    self.game.tempName.pulse(effect.lightTime)
+                    self.runtime -=  effect.delay
+                    effect.point1.x += 1
+                    self.delayed_name = self.delay(name=effect.name, event_type=None, delay=effect.delay, handler=self.leftToRight, param=effect)
+
+                    #remove all below on final version
+                    self.drawLight(self.tempName, effect, self.red)
+        #test to see if any lights are left and if not, do we need to repeat?
+        if self.counter == 0:                                #if true, all lamps have been processed this go around
+            for key in effect.lampList:
+                effect.lampList[key].processed = False      #reset flag
+            if effect.repeat > 0:
+                effect.repeat -= 1
+                effect.point1.x = 0
+                self.leftToRight(effect)
+            else:
+                for key in self.sequences:
+                    if key ==  effect.name:
+                        self.sequences.remove(key)
+                for key in self.effects:
+                    if key ==  effect.name:
+                        self.effects.remove(key)
+
+    def rightToLeft(self, effect):
+        '''lights lamps from right to left, then repeats if necessary'''
+        self.counter = 0
+        #process lamps that haven't been processed yet
+        for key in effect.lampList:
+            if effect.lampList[key].processed == False:
+                self.counter += 1
+                if effect.lampList[key].x > effect.point1.x:
+                    effect.lampList[key].processed = True
+                    self.tempName = lampList[key].name
+                    self.game.tempName.pulse(effect.lightTime)
+                    self.runtime -=  effect.delay
+                    effect.point1.x -= 1
+                    self.delayed_name = self.delay(name=effect.name, event_type=None, delay=effect.delay, handler=self.rightToLeft, param=effect)
+
+                    #remove all below on final version
+                    self.drawLight(self.tempName, effect, self.red)
+        #test to see if any lights are left and if not, do we need to repeat?
+        if self.counter == 0:                                #if true, all lamps have been processed this go around
+            for key in effect.lampList:
+                effect.lampList[key].processed = False      #reset flag
+            if effect.repeat > 0:
+                effect.repeat -= 1
+                effect.point1.x = self.maxX
+                self.rightToLeft(effect)
             else:
                 for key in self.sequences:
                     if key ==  effect.name:
