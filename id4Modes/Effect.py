@@ -26,5 +26,5 @@ class Effect():
 
     def loadLamps(self, lamplist):
         for key in lamplist:
-            self.temp = LampList(0, key, lamplist[key].x, lamplist[key].y, False)
+            self.temp = LampList(0, key, lamplist[key]['x'], lamplist[key]['y'], False)
             self.lampList.append(self.temp)
