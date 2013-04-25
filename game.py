@@ -744,3 +744,10 @@ class id4Game(game.BasicGame):
 
     def remote_load_settings(self,restore=False):
         self.load_settings(settings_defaults_path, user_settings_path,restore)
+        
+    def create_player(self, name):
+		"""Instantiates and returns a new instance of the :class:`id4Player` class with the
+		name *name*.
+		This method is called by :meth:`add_player`.
+		"""
+		return id4Player(name)
