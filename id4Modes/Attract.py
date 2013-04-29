@@ -3,6 +3,7 @@ from procgame import *
 import locale
 import random
 import sys
+from LightSequencer import *
 
 # Used to put commas in the score.
 locale.setlocale(locale.LC_ALL, "")
@@ -14,34 +15,16 @@ class Attract(game.Mode):
         #setup animation and text layers for attract mode
 
     def mode_started(self):
-        '''
-        ## lampshows for attract mode
-        lampshows = [
-            self.game.assets.lamp_topToBottom,
-            self.game.assets.lamp_bottomToTop,
-            self.game.assets.lamp_topToBottom,
-            self.game.assets.lamp_bottomToTop,
-            self.game.assets.lamp_fanRight,
-            self.game.assets.lamp_fanLeft,
-            self.game.assets.lamp_fanRight,
-            self.game.assets.lamp_fanLeft,
-            self.game.assets.lamp_colors,
-            self.game.assets.lamp_colors,
-            self.game.assets.lamp_rightToLeft,
-            self.game.assets.lamp_leftToRight,
-            self.game.assets.lamp_rightToLeft,
-            self.game.assets.lamp_leftToRight,
-            self.game.assets.lamp_starShots,
-            self.game.assets.lamp_starShots,
-            self.game.assets.lamp_starShots,
-        ]
-        self.game.schedule_lampshows(lampshows,True)
-
+        """schedule light sequences we want to play during attract mode"""
+        self.game.lightSeq.play('test', 'topToBottom', False, 1, 50, 1)
+        self.game.lightSeq.play('test', 'bottomToTop', False, 1, 50, 1)
+        self.game.lightSeq.play('test', 'diagBottomLeftToRight', False, 1, 50, 1)
+        self.game.lightSeq.play('test', 'diagBottomRightToLeft', False, 1, 50, 4)
         # run an initial pass on the animation loop
-        self.run_animation_loop()
+        #self.run_animation_loop()
         # then kick off the timer to run it after that
-        self.timer_countdown()
-
+        #self.timer_countdown()
+    '''
     def run_animation_loop(self):
         # grab the current index
         indexA = self.myIndex
@@ -86,7 +69,7 @@ class Attract(game.Mode):
         self.cancel_delayed('slideshow_timer')
         self.delay('slideshow_timer', event_type=None, delay=1, handler=self.timer_countdown)
 
-'''
+    
     def sw_flipperLwL_active(self,sw):
         # if going left - bump the index down
         if self.flipperOK:
@@ -96,7 +79,7 @@ class Attract(game.Mode):
     def sw_flipperLwR_active(self,sw):
         if self.flipperOK:
             self.flipper_action()
-    '''
+    
     def flipper_action(self):
         if self.slowFlipper:
             self.flipperOK = False
@@ -135,7 +118,7 @@ class Attract(game.Mode):
             random.shuffle(self.game.sound.sounds[key])
         self.game.sound.sounds[key][0].play(loops,max_time,fade_ms)
         return self.game.sound.sounds[key][0].get_length()
-    '''
+    
         
     def mode_topmost(self):
         pass
@@ -185,7 +168,7 @@ class Attract(game.Mode):
 	 	  print("Volume Up : " + str(volume))
 	 	  return true
 	 	  
-    '''
+    
     def generate_score_frames(self):
         # This big mess generates frames for the attract loop based on high score data.
         # Read the categories

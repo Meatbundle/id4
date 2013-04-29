@@ -158,9 +158,6 @@ test:
   fourLane:
     x: 15
     y: 45
-  shootAgain:
-    x: 10
-    y: 7
   releaseDestMid:
     x: 7
     y: 17

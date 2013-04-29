@@ -17,7 +17,7 @@ locale.setlocale(locale.LC_ALL, "")
 curr_file_path = os.path.dirname(os.path.abspath( __file__ ))
 
 class LightSequencer(game.Mode):
-    """Independence Day Attract Mode"""
+    """this class automates the playing of lights in several different patterns"""
     def __init__(self, game, priority):
         super(LightSequencer, self).__init__(game, priority)
         self.minX = 0
@@ -36,7 +36,6 @@ class LightSequencer(game.Mode):
         self.white = (255,255,255)
         self.red = (255,0,0)
         self.drawLights()
-        self.play('test', 'blink', False, 1, 50, 4)
 
     def loadAll(self):
         """Loads all desired lamp lists and stores them in self.lampLists"""
@@ -82,20 +81,33 @@ class LightSequencer(game.Mode):
 
                 self.sequences.append(self.tempEffect.name)
                 self.effects.append(self.tempEffect)
+                self.tempDelay = self.runtime
                 self.runtime += length * (repeat + 1)
 
                 if effect == 'topToBottom':
                     self.effects[-1].point1.y = self.maxY
-                    self.topToBottom(self.effects[-1])
+                    self.delayed_name = self.delay(name=self.effects[-1].name, event_type=None, delay=self.tempDelay, handler=self.topToBottom, param=self.effects[-1])
                 elif effect == 'bottomToTop':
                     self.effects[-1].point1.y = 0
-                    self.bottomToTop(self.effects[-1])
+                    self.delayed_name = self.delay(name=self.effects[-1].name, event_type=None, delay=self.tempDelay, handler=self.bottomToTop, param=self.effects[-1])
                 elif effect == 'leftToRight':
                     self.effects[-1].point1.x = 0
-                    self.leftToRight(self.effects[-1])
+                    self.delayed_name = self.delay(name=self.effects[-1].name, event_type=None, delay=self.tempDelay, handler=self.leftToRight, param=self.effects[-1])
                 elif effect == 'rightToLeft':
                     self.effects[-1].point1.x = self.maxX
-                    self.rightToLeft(self.effects[-1])
+                    self.delayed_name = self.delay(name=self.effects[-1].name, event_type=None, delay=self.tempDelay, handler=self.rightToLeft, param=self.effects[-1])
+                elif effect == 'diagBottomLeftToRight':
+                    self.effects[-1].point1.x = 0
+                    self.effects[-1].point1.y = 1
+                    self.effects[-1].point2.x = 1
+                    self.effects[-1].point2.y = 0
+                    self.delayed_name = self.delay(name=self.effects[-1].name, event_type=None, delay=self.tempDelay, handler=self.diagBottomLeftToRight, param=self.effects[-1])
+                elif effect == 'diagBottomRightToLeft':
+                    self.effects[-1].point1.x = self.maxX - 1
+                    self.effects[-1].point1.y = 0
+                    self.effects[-1].point2.x = self.maxX
+                    self.effects[-1].point2.y = 1
+                    self.delayed_name = self.delay(name=self.effects[-1].name, event_type=None, delay=self.tempDelay, handler=self.diagBottomRightToLeft, param=self.effects[-1])
                 elif effect == 'blink':
                     self.blink(self.effects[-1])
                 else:
@@ -139,7 +151,205 @@ class LightSequencer(game.Mode):
         else:
             self.delayed_name = self.delay(name= effect.name, event_type=None, delay= effect.delay, handler=self.topToBottom, param= effect)
             effect.point1.y -= 1
-            
+
+    def bottomToTop(self, effect):
+        '''Starts at top of playfield and lights all lamps from bottom to top for effect.lightTime millisceonds, then repeats if required'''
+        self.counter = 0
+        #process lamps that haven't been processed yet
+        for key in effect.lampList:
+            if key.processed == False:
+                self.counter += 1
+                if key.y < effect.point1.y:
+                    key.processed = True
+                    self.game.lamps[key.name].pulse(effect.lightTime)
+                    self.runtime -=  effect.delay
+
+                    #remove all below on final version
+                    self.drawLight(key.name, effect, self.red)
+
+        #test to see if any lights are left and if not, do we need to repeat?
+        if self.counter == 0:                                #if true, all lamps have been processed this go around
+            for key in effect.lampList:
+                key.processed = False      #reset flag
+            if effect.repeat > 0:
+                effect.repeat -= 1
+                effect.point1.y = 0
+                self.bottomToTop(effect)
+            else:
+                for key in self.sequences:
+                    if key ==  effect.name:
+                        self.sequences.remove(key)
+                for key in self.effects:
+                    if key ==  effect.name:
+                        self.effects.remove(key)
+        else:
+            self.delayed_name = self.delay(name= effect.name, event_type=None, delay= effect.delay, handler=self.bottomToTop, param= effect)
+            effect.point1.y += 1
+
+    def rightToLeft(self, effect):
+        '''Starts at top of playfield and lights all lamps from top to bottom for effect.lightTime millisceonds, then repeats if required'''
+        self.counter = 0
+        #process lamps that haven't been processed yet
+        for key in effect.lampList:
+            if key.processed == False:
+                self.counter += 1
+                if key.x > effect.point1.x:
+                    key.processed = True
+                    self.game.lamps[key.name].pulse(effect.lightTime)
+                    self.runtime -=  effect.delay
+
+                    #remove all below on final version
+                    self.drawLight(key.name, effect, self.red)
+
+        #test to see if any lights are left and if not, do we need to repeat?
+        if self.counter == 0:                                #if true, all lamps have been processed this go around
+            for key in effect.lampList:
+                key.processed = False      #reset flag
+            if effect.repeat > 0:
+                effect.repeat -= 1
+                effect.point1.x = self.maxX
+                self.rightToLeft(effect)
+            else:
+                for key in self.sequences:
+                    if key ==  effect.name:
+                        self.sequences.remove(key)
+                for key in self.effects:
+                    if key ==  effect.name:
+                        self.effects.remove(key)
+        else:
+            self.delayed_name = self.delay(name= effect.name, event_type=None, delay= effect.delay, handler=self.rightToLeft, param= effect)
+            effect.point1.x -= 1
+    
+    def leftToRight(self, effect):
+        '''Starts at top of playfield and lights all lamps from top to bottom for effect.lightTime millisceonds, then repeats if required'''
+        self.counter = 0
+        #process lamps that haven't been processed yet
+        for key in effect.lampList:
+            if key.processed == False:
+                self.counter += 1
+                if key.x < effect.point1.x:
+                    key.processed = True
+                    self.game.lamps[key.name].pulse(effect.lightTime)
+                    self.runtime -=  effect.delay
+
+                    #remove all below on final version
+                    self.drawLight(key.name, effect, self.red)
+
+        #test to see if any lights are left and if not, do we need to repeat?
+        if self.counter == 0:                                #if true, all lamps have been processed this go around
+            for key in effect.lampList:
+                key.processed = False      #reset flag
+            if effect.repeat > 0:
+                effect.repeat -= 1
+                effect.point1.x = 0
+                self.leftToRight(effect)
+            else:
+                for key in self.sequences:
+                    if key ==  effect.name:
+                        self.sequences.remove(key)
+                for key in self.effects:
+                    if key ==  effect.name:
+                        self.effects.remove(key)
+        else:
+            self.delayed_name = self.delay(name= effect.name, event_type=None, delay= effect.delay, handler=self.leftToRight, param= effect)
+            effect.point1.x += 1
+
+    def diagBottomLeftToRight(self, effect):
+        '''Starts at bottom left of playfield and lights diagonally up towards upper right of playfield'''
+        self.counter = 0
+        #process lamps that haven't been processed yet
+        for key in effect.lampList:
+            if key.processed == False:
+                self.counter += 1
+                #calculate determinate. if at or less than 0, line is past lamp and should light it
+                d = self.determinate(effect.point1, effect.point2, key.x, key.y)
+                if d == 0:
+                    key.processed = True
+                    self.game.lamps[key.name].pulse(effect.lightTime)
+                    self.runtime -=  effect.delay
+
+                    #remove all below on final version
+                    self.drawLight(key.name, effect, self.red)
+
+        #test to see if any lights are left and if not, do we need to repeat?
+        if self.counter == 0:                                #if true, all lamps have been processed this go around
+            for key in effect.lampList:
+                key.processed = False      #reset flag
+            if effect.repeat > 0:
+                effect.repeat -= 1
+                self.effects[-1].point1.x = 0
+                self.effects[-1].point1.y = 1
+                self.effects[-1].point2.x = 1
+                self.effects[-1].point2.y = 0
+                self.leftToRight(effect)
+            else:
+                for key in self.sequences:
+                    if key ==  effect.name:
+                        self.sequences.remove(key)
+                for key in self.effects:
+                    if key ==  effect.name:
+                        self.effects.remove(key)
+        else:
+            self.delayed_name = self.delay(name= effect.name, event_type=None, delay= effect.delay, handler=self.diagBottomLeftToRight, param= effect)
+            #iterate point1 from (0,1) to (0,maxY) then to (maxX, maxY)
+            if effect.point1.y > self.maxY:
+                effect.point1.x += 1
+            else:
+                effect.point1.y += 1
+            #iterate point2 from (1,0) to (1,maxX) then to (maxX, maxY)
+            if effect.point2.x > self.maxX:
+                effect.point2.y += 1
+            else:
+                effect.point2.x += 1
+
+    def diagBottomRightToLeft(self, effect):
+        '''Starts at bottom left of playfield and lights diagonally up towards upper right of playfield'''
+        self.counter = 0
+        #process lamps that haven't been processed yet
+        for key in effect.lampList:
+            if key.processed == False:
+                self.counter += 1
+                #calculate determinate. if at or less than 0, line is past lamp and should light it
+                d = self.determinate(effect.point1, effect.point2, key.x, key.y)
+                if d == 0:
+                    key.processed = True
+                    self.game.lamps[key.name].pulse(effect.lightTime)
+                    self.runtime -=  effect.delay
+
+                    #remove all below on final version
+                    self.drawLight(key.name, effect, self.red)
+
+        #test to see if any lights are left and if not, do we need to repeat?
+        if self.counter == 0:                                #if true, all lamps have been processed this go around
+            for key in effect.lampList:
+                key.processed = False      #reset flag
+            if effect.repeat > 0:
+                effect.repeat -= 1
+                self.effects[-1].point1.x = self.maxX - 1
+                self.effects[-1].point1.y = 0
+                self.effects[-1].point2.x = self.maxX
+                self.effects[-1].point2.y = 1
+                self.leftToRight(effect)
+            else:
+                for key in self.sequences:
+                    if key ==  effect.name:
+                        self.sequences.remove(key)
+                for key in self.effects:
+                    if key ==  effect.name:
+                        self.effects.remove(key)
+        else:
+            self.delayed_name = self.delay(name= effect.name, event_type=None, delay= effect.delay, handler=self.diagBottomRightToLeft, param= effect)
+            #iterate point1 from (maxX, 0) to (0,0) then to (0, maxY)
+            if effect.point1.x <=0:
+                effect.point1.y += 1
+            else:
+                effect.point1.x -= 1
+            #iterate point2 from (maxX,1) to (maxX,maxX) then to (0,maxY)
+            if effect.point2.y > self.maxY:
+                effect.point2.x -= 1
+            else:
+                effect.point2.y += 1
+
     def blink(self, effect):
         """blinks all the lights as many times as repeat is set to, with delay set by length"""
         for key in effect.lampList:
@@ -159,6 +369,12 @@ class LightSequencer(game.Mode):
             for key in self.effects:
                 if key ==  effect.name:
                     self.effects.remove(key)
+
+    def determinate(self, p, q, rx, ry):
+        '''function calculates a determinate between two endpoints of a line and a middle point to see if point is on the line
+            if d is close to zero, point is on the line'''
+        d = ((q.x-p.x)*(ry-p.y)-(q.y-p.y)*(rx-p.x))
+        return d
 
     #delete this function for final build
     def drawLights(self):
@@ -183,9 +399,8 @@ class LightSequencer(game.Mode):
                 self.recolor_name = self.delay(name=key, event_type=None, delay=effect.lightTime/1000, handler=self.recolor, param=effect)
         pygame.display.flip()
 
-        #delete this function and references for final build
+    #delete this function and references for final build
     def recolor(self,effect):
-
         for key in effect.lampList:
             now = datetime.now()
             now = (now.second * 1000 + now.microsecond / 1000)        #convert to milliseconds
