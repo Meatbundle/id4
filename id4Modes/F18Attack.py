@@ -20,8 +20,6 @@ class F18Attack(game.Mode):
         super(F18Attack, self).__init__(game, priority)
         self.player.f18Started = True
         self.player.f18hitsForComplete = 10        #reset to a setting via service menu at some point
-        #launch another ball
-        #increment balls in play
         #setup animations
         #play light show
         #play sound clip
