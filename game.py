@@ -248,9 +248,8 @@ class id4Game(game.BasicGame):
         #    self.interrupter.display_player_number()
 
     def create_player(self,name):
-        # create an object wiht the Tracking Class - subclassed off game.Player
-        #return tracking.Tracking(name)
-        pass
+        player = id4Player(name)
+        return player
 
     def game_started(self):
         self.log("GAME STARTED")
@@ -550,17 +549,14 @@ class id4Game(game.BasicGame):
         else:
             print "Stack set not updating thh lamps"
 
+    '''
     # score with bonus
-    def score_with_bonus(self, points,percent=7):
+    def addPoints(self, points):
         """Convenience method to add *points* to the current player."""
         p = self.current_player()
         p.score += points
-        # divide the score by 100 to get what 1 % is (rounded), then multiply by the applied percent, then round to an even 10.
-        # why? because that's what modern pinball does. Score always ends in 0
-        bonus = points / 100 * percent / 10 * 10
-        #print "ADDING BONUS - " + str(bonus)
-        p.player_stats['bonus'] += bonus
-
+     
+    '''
     ## bonus stuff
 
     # extra method for adding bonus to make it shorter when used
