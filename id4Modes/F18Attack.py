@@ -19,13 +19,14 @@ class F18Attack(game.Mode):
         self.player = self.game.current_player()
         super(F18Attack, self).__init__(game, priority)
         self.player.f18Started = True
-        self.player.f18hitsForComplete = 10        #reset to a setting via service menu at some point
         #setup animations
         #play light show
         #play sound clip
 
     def sw_leftOrbTop_active(self, sw):
         if self.game.lastSwitch == 'leftOrbBottom':     #make sure we came from bottom to top
+            self.game.coils.rightControlGate.pulsed_patter(on_time=10, off_time=10, run_time=500, now=True)        #open control gates for .5 seconds
+            self.game.coils.leftControlGate.pulsed_patter(on_time=10, off_time=10, run_time=500, now=True)        #open control gates for .5 seconds
             if self.game.player.nextLoop == 'left':     #if this is correct loop, score jackpot
                 if self.player.ballLocked == True:      #is a ball locked in the tunnel? if so, jackpot is doubled
                     self.player.addPoints(self.player.f18JackpotValue * 2)
@@ -49,6 +50,8 @@ class F18Attack(game.Mode):
 
     def sw_rightOrbTop_active(self, sw):
         if self.game.lastSwitch == 'rightOrbBottom':     #make sure we came from bottom to top
+            self.game.coils.rightControlGate.pulsed_patter(on_time=10, off_time=10, run_time=500, now=True)        #open control gates for .5 seconds
+            self.game.coils.leftControlGate.pulsed_patter(on_time=10, off_time=10, run_time=500, now=True)        #open control gates for .5 seconds
             if self.player.nextLoop == 'right':     #if this is correct loop, score jackpot
                 if self.player.ballLocked == True:      #is a ball locked in the tunnel? if so, jackpot is doubled
                     self.player.addPoints(self.player.f18JackpotValue * 2)

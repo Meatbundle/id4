@@ -6,7 +6,7 @@
 ## Starter script
 ## shamelessly cribbed from Koen Hetzels's Bride of Pinbot 2.0 and 
 
-#from procgame import *
+from procgame import *
 import locale
 import yaml
 import sys

@@ -20,10 +20,10 @@ class id4Player(object):
 
     f18hits = 0			#hits that qualified to start independence mode
     f18Ready = False		#is mode ready to be started
-    f18hitsRequired = 0		#num hits required to start mode
+    f18hitsRequired = 6		#num hits required to start mode
     f18Started = False		#has player started mode
     f18Complete = False		#has player completed mode
-    f18hitsForComplete = 0	#how many hits to complete mode
+    f18hitsForComplete = 10	#how many hits to complete mode
     f18JackpotValue = 5000000   #base jackpot value
     nextLoop = 'right'		#which loop to hit next to advance mode
     ballLocked = False          #is ball locked in tunnel to double jackpot?
