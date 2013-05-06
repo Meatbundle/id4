@@ -18,7 +18,7 @@ class id4Player(object):
     rampHitsForComplete = 0		#how many ramps until mode is completed
     nextRamp = 'right'		#which ramp to hit to advance ramp modes
 
-    f18hits = 0			#hits that qualified to start independence mode
+    f18hits = 0             #hits that qualified to start independence mode
     f18Ready = False		#is mode ready to be started
     f18hitsRequired = 6		#num hits required to start mode
     f18Started = False		#has player started mode

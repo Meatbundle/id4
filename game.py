@@ -73,10 +73,6 @@ class id4Game(game.BasicGame):
 
         ## init the sound
         self.sound = sound.SoundController(self)
-        ## init the lamp controller
-        #self.lampctrl = ep.EP_LampController(self)
-        ## and a separate one for GI
-        #self.GI_lampctrl = ep.EP_LampControllerGI(self)
         ## load all the assets (sound/dots)
         #self.assets = Assets(self)
         ## Set the current song for use with the music method
@@ -84,8 +80,6 @@ class id4Game(game.BasicGame):
 
         # reset score display to mine
         #self.score_display = cc_modes.ScoreDisplay(self,0)
-
-        #self.showcase = ep.EP_Showcase(self)
 
         # last switch variable for tracking
         self.lastSwitch = None
@@ -145,6 +139,8 @@ class id4Game(game.BasicGame):
         #Create the objects for the basic modes
         self.attract = id4Modes.Attract(game=self,priority=4)
         self.lightSeq = id4Modes.LightSequencer(game=self,priority=4)
+        self.leftOrb = id4Modes.LeftOrbit(game=self,priority=10)
+        self.f18Attack = id4Modes.F18Attack(game=self, priority=15)
         '''
         self.base = cc_modes.BaseGameMode(game=self,priority=4)
         
@@ -152,7 +148,7 @@ class id4Game(game.BasicGame):
         self.right_ramp = cc_modes.RightRamp(game=self,priority=10)
         self.left_ramp = cc_modes.LeftRamp(game=self,priority=10)
         self.center_ramp = cc_modes.CenterRamp(game=self,priority=10)
-        self.left_loop = cc_modes.LeftLoop(game=self,priority=10)
+        
         self.right_loop = cc_modes.RightLoop(game=self,priority=10)
         # combos should always register - so they ride above the switch block
         self.combos = cc_modes.Combos(game=self,priority=14)
@@ -211,7 +207,7 @@ class id4Game(game.BasicGame):
 
     def start_game(self):
         # remove the attract mode
-        self.modes.remove(self.attract_mode)
+        self.modes.remove(self.attract)
         # kill the attract mode song fade delay just in case
         #self.interrupter.cancel_delayed("Attract Fade")
         # tick up the audits

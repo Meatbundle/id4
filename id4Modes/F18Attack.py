@@ -16,12 +16,15 @@ locale.setlocale(locale.LC_ALL, "")
 class F18Attack(game.Mode):
     """Independence Day Attract Mode"""
     def __init__(self, game, priority):
-        self.player = self.game.current_player()
         super(F18Attack, self).__init__(game, priority)
+
+    def startMode(self, game):
+        self.player = self.game.current_player()
         self.player.f18Started = True
         #setup animations
         #play light show
         #play sound clip
+
 
     def sw_leftOrbTop_active(self, sw):
         if self.game.lastSwitch == 'leftOrbBottom':     #make sure we came from bottom to top
