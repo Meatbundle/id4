@@ -66,6 +66,10 @@ class LightSequencer(game.Mode):
         length: how long the sequencer should take to finish the effect (in seconds)
         lightTime: how long each lamp should stay lit once lit (in milliseconds, cannot be greater than 255 and will be set to 255 if passed value is higher)
         repeat: how many times to repeat the effect."""
+        if lightTime > 255:
+            print "lightTime too high, setting to 255"
+            lightTime = 255
+        
         for key in self.lampLists:
             if key[listName]:
                 self.temp = key[listName]
