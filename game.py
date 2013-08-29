@@ -137,10 +137,13 @@ class id4Game(game.BasicGame):
         '''
         #Initialize all of the modes
         #Create the objects for the basic modes
-        self.attract = id4Modes.Attract(game=self,priority=4)
-        self.lightSeq = id4Modes.LightSequencer(game=self,priority=4)
-        self.leftOrb = id4Modes.LeftOrbit(game=self,priority=10)
+        self.attract = id4Modes.Attract(game=self, priority=4)
+        self.lightSeq = id4Modes.LightSequencer(game=self, priority=4)
+        self.base = id4Modes.BaseMode(game=self, priority = 11)
+        self.leftOrbit = id4Modes.LeftOrbit(game=self, priority=10)
+        self.rightOrbit = id4Modes.RightOrbit(game=self, priority=10)
         self.f18Attack = id4Modes.F18Attack(game=self, priority=15)
+
         '''
         self.base = cc_modes.BaseGameMode(game=self,priority=4)
         
@@ -162,38 +165,12 @@ class id4Game(game.BasicGame):
         # set up an array of the modes
         # this subset is used for clearing displays on command
         self.id4Modes = [self.attract,
-                         self.lightSeq]
+                         self.lightSeq,
+                         self.base,
+                         self.leftOrbit,
+                         self.rightOrbit]
         '''
                          self.base,
-                         self.right_ramp,
-                         self.right_loop,
-                         self.center_ramp,
-                         self.left_loop,
-                         self.left_ramp,
-                         self.saloon,
-                         self.mine,
-                         self.bad_guys,
-                         self.save_polly,
-                         self.skill_shot,
-                         self.gm_multiball,
-                         self.interrupter,
-                         self.bonus_lanes,
-                         self.stampede,
-                         self.high_noon,
-                         self.drunk_multiball,
-                         self.quickdraw,
-                         self.showdown,
-                         self.ambush,
-                         self.gunfight,
-                         self.badge,
-                         self.bionic,
-                         self.bart,
-                         self.move_your_train,
-                         self.bank_robbery,
-                         self.river_chase,
-                         self.cva,
-                         self.marshall_multiball,
-                         self.moonlight]
 '''
         self.id4Modes.sort(lambda x, y: y.priority - x.priority)
         # Add in the base modes that are active at start
@@ -228,8 +205,10 @@ class id4Game(game.BasicGame):
         # reset the music volume
         self.volume_to_set = (self.user_settings['Sound']['Initial volume'] / 10.0)
         self.sound.set_volume(self.volume_to_set)
-        # load the base game mode
+        # load the base game mode and helper modes
         self.modes.add(self.base)
+        self.modes.add(self.leftOrbit)
+        self.modes.add(self.rightOrbit)
         # Start the ball.  This includes ejecting a ball from the trough.
         self.start_ball()
         # add the ability to see the status

@@ -11,7 +11,7 @@ locale.setlocale(locale.LC_ALL, "")
 class RightOrbit(game.Mode):
     """Independence Day Mode To handle right orbit shots when not in another mode"""
     def __init__(self, game, priority):
-        self.player = self.game.current_player()
+        self.player = game.current_player()
         super(RightOrbit, self).__init__(game, priority)
 
     def sw_rightOrbTop_active(self, sw):

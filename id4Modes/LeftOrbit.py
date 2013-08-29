@@ -11,6 +11,7 @@ locale.setlocale(locale.LC_ALL, "")
 class LeftOrbit(game.Mode):
     """Independence Day Attract Mode"""
     def __init__(self, game, priority):
+        self.game = game
         self.player = self.game.current_player()
         super(LeftOrbit, self).__init__(game, priority)
 

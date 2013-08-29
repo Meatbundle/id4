@@ -16,9 +16,9 @@ class Attract(game.Mode):
 
     def mode_started(self):
         """schedule light sequences we want to play during attract mode"""
-        self.game.lightSeq.play('test', 'topToBottom', False, 1, 50, 1)
-        self.game.lightSeq.play('test', 'bottomToTop', False, 1, 50, 1)
-        self.game.lightSeq.play('test', 'diagBottomLeftToRight', False, 1, 50, 1)
+        #self.game.lightSeq.play('test', 'topToBottom', False, 1, 50, 1)
+        #self.game.lightSeq.play('test', 'bottomToTop', False, 1, 50, 1)
+        #self.game.lightSeq.play('test', 'diagBottomLeftToRight', False, 1, 50, 1)
         self.game.lightSeq.play('test', 'diagBottomRightToLeft', False, 1, 50, 4)
         # run an initial pass on the animation loop
         #self.run_animation_loop()

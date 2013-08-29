@@ -1,11 +1,15 @@
+import procgame
+from procgame import *
+import locale
+import random
+import sys
+from LightSequencer import *
 
-import main
-
-class baseMode(game.Mode):
+class BaseMode(game.Mode):
 	"""docstring for baseMode"""
-	def __init__(self, game):
-		super(baseMode, self).__init__(game, 2)
-		self.tilt_layer = dmd.TextLayer(128/2, 7, font_jazz18, "center").set_text("TILT!")
+	def __init__(self, game, priority):
+		super(BaseMode, self).__init__(game, 2)
+		#self.tilt_layer = dmd.TextLayer(128/2, 7, font_jazz18, "center").set_text("TILT!")
 		self.layer = None # Presently used for tilt layer
 		self.ball_starting = True
 
@@ -80,7 +84,7 @@ class baseMode(game.Mode):
 			p = self.game.add_player()
 			self.game.set_status(p.name + " added!")
 
-	def sw_shooterR_open_for_1s(self,sw):
+	'''def sw_shooterR_open_for_1s(self,sw):
 		if self.ball_starting:
 			self.ball_starting = False
 			ball_save_time = 10
@@ -100,7 +104,7 @@ class baseMode(game.Mode):
 	def sw_enter_active(self, sw):
 		self.game.modes.add(self.game.service_mode)
 		return True
-
+'''
 	def sw_tilt_active(self, sw):
 		if self.times_warned == 2:
 			self.tilt()
