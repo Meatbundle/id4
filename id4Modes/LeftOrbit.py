@@ -9,7 +9,7 @@ from LightSequencer import *
 locale.setlocale(locale.LC_ALL, "")
 
 class LeftOrbit(game.Mode):
-    """Independence Day Attract Mode"""
+    """Handles regular play for the left orbit"""
     def __init__(self, game, priority):
         self.game = game
         self.player = self.game.current_player()
@@ -33,4 +33,4 @@ class LeftOrbit(game.Mode):
     def sw_leftOrbBottom_active(self, sw):
         self.game.lastSwitch = 'leftOrbBottom'
         self.player.addPoints(10000)
-        #play sound??
+        #play sound

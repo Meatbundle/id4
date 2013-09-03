@@ -42,6 +42,9 @@ class F18Attack(game.Mode):
                 #playsound (same sound for jack or double jack)
                 self.player.nextLoop = 'right'
                 self.player.f18HitsForComplete -= 1
+
+                #light rightorb light to show player which shot is next jackpot
+
         self.game.lastSwitch = 'leftOrbTop'
         return game.switchStop
 
@@ -67,6 +70,9 @@ class F18Attack(game.Mode):
                 #playsound (same sound for jack or double jack)
                 self.player.nextLoop = 'left'
                 self.player.f18HitsForComplete -= 1
+                
+                #light leftside light to show player which jackpot is now lit
+
         self.game.lastSwitch = 'rightOrbTop'
         return game.switchStop
 
@@ -77,15 +83,24 @@ class F18Attack(game.Mode):
         return game.switchStop
 
     def sw_vukSideEnter_active(self, sw):
-        #if all ready a ball in vuk, eject it
+        #if all ready a ball in vuk, eject it and reset kickout timer
         if self.player.ballLocked == True:
             self.game.coils.vuk.pulse(25)
-            #play anim that ball is locked
+            self.cancel_delayed(self.delayed_name)
         else:
             self.player.ballLocked = True
-        self.game.lastSwitch = 'vukSideEnter'
+            #play anim that ball is locked
         #play sound
         #close alien head
+        #start delayed timer to kick out ball after certain amount of seconds
+        self.delayed_name = self.delay(delay=10, handler=self.kickoutBall)
+
+        self.game.lastSwitch = 'vukSideEnter'
+        return game.switchStop
+
+    def kickoutBall(self):
+        self.game.coils.vuk.pulse(25)
+        self.player.ballLocked = False
 
     def mode_stopped(self):
         self.player.f18hitsRequired = (self.game.f18HitsToStart * 2)    #next time will take 2x as many shots to start mode. change to setting

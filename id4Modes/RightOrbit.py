@@ -32,4 +32,4 @@ class RightOrbit(game.Mode):
     def sw_rightOrbBottom_active(self, sw):
         self.game.lastSwitch = 'rightOrbBottom'
         self.player.addPoints(10000)
-        #play sound??
+        #play sound

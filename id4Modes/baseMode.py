@@ -30,7 +30,6 @@ class BaseMode(game.Mode):
 		self.game.enable_flippers(enable=True)
 
 		# Put the ball into play and start tracking it.
-		# self.game.coils.trough.pulse(40)
 		self.game.trough.launch_balls(1, self.ball_launch_callback)
 
 		# Enable ball search in case a ball gets stuck during gameplay.

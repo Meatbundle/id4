@@ -16,4 +16,5 @@ from LightSequencer import *
 from F18Attack import *
 from LeftOrbit import *
 from RightOrbit import *
+from LeftRamp import *
 from BaseMode import *

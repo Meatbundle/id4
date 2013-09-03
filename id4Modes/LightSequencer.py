@@ -75,6 +75,7 @@ class LightSequencer(game.Mode):
                 self.temp = key[listName]
                 self.tempName = 'list' + str(uuid.uuid1())
                 self.tempDelay = (float(length)/self.maxY)
+                print self.tempDelay
                 self.tempEffect = Effect(self.tempName, self.temp, length, lightTime, repeat, self.tempDelay)
 
                 if overwrite:
@@ -113,6 +114,13 @@ class LightSequencer(game.Mode):
                     self.effects[-1].point2.y = 2
                     self.delayed_name = self.delay(name=self.effects[-1].name, event_type=None, delay=self.tempDelay, handler=self.diagBottomRightToLeft, param=self.effects[-1])
                     print "running diagBottomRightToLeft"
+                elif effect == 'diagTopLeftToRight':
+                    self.effects[-1].point1.x = 0
+                    self.effects[-1].point1.y = self.maxY - 1
+                    self.effects[-1].point2.x = 1
+                    self.effects[-1].point2.y = self.maxY
+                    self.delayed_name = self.delay(name=self.effects[-1].name, event_type=None, delay=self.tempDelay, handler=self.diagTopLeftToRight, param=self.effects[-1])
+                    print "running diagTopLeftToRight"
                 elif effect == 'blink':
                     self.blink(self.effects[-1])
                 else:
@@ -362,6 +370,61 @@ class LightSequencer(game.Mode):
             else:
                 self.delayed_name = self.delay(name=effect.name, event_type=None, delay = 0, handler = self.diagBottomRightToLeft, param = effect)
 
+    def diagTopLeftToRight(self, effect):
+            '''Starts at top left of playfield and lights diagonally down towards bottom right of playfield'''
+            print "diagTopLeftToRight"
+            self.counter = 0
+            self.litLamp = False
+            #process lamps that haven't been processed yet
+            for key in effect.lampList:
+                if key.processed == False:
+                    self.counter += 1
+                    #calculate determinate. if at or less than 0, line is past lamp and should light it
+                    d = self.determinate(effect.point1, effect.point2, key.x, key.y)
+                    if d >= 0:
+                        self.litLamp = True
+                        key.processed = True
+                        self.game.lamps[key.name].pulse(effect.lightTime)
+                        self.runtime -=  effect.delay
+
+                        #remove all below on final version
+                        self.drawLight(key.name, effect, self.red)
+
+            #test to see if any lights are left and if not, do we need to repeat?
+            if self.counter == 0:                                #if true, all lamps have been processed this go around
+                for key in effect.lampList:
+                    key.processed = False      #reset flag
+                if effect.repeat > 0:
+                    effect.repeat -= 1
+                    effect.point1.x = 0
+                    effect.point1.y = self.maxY - 1
+                    effect.point2.x = 1
+                    effect.point2.y = self.maxY
+                    self.diagTopLeftToRight(effect)
+                else:
+                    for key in self.sequences:
+                        if key ==  effect.name:
+                            self.sequences.remove(key)
+                    for key in self.effects:
+                        if key ==  effect.name:
+                            self.effects.remove(key)
+            else:
+                #iterate point1 from (0, maxY) to (0,0) then to (maxX, 0)
+                if effect.point1.y > 0:
+                    effect.point1.y -= 1
+                else:
+                    effect.point1.x += 1
+                #iterate point2 from (1, maxY) to (maxX,maxY) then to (maxX,1)
+                if effect.point2.x < self.maxX:
+                    effect.point2.x += 1
+                else:
+                    effect.point2.y -= 1
+
+                if self.litLamp:
+                    self.delayed_name = self.delay(name= effect.name, event_type=None, delay= effect.delay, handler=self.diagTopLeftToRight, param= effect)
+                else:
+                    self.delayed_name = self.delay(name=effect.name, event_type=None, delay = 0, handler = self.diagTopLeftToRight, param = effect)
+
     def blink(self, effect):
         """blinks all the lights as many times as repeat is set to, with delay set by length"""
         for key in effect.lampList:
@@ -384,8 +447,7 @@ class LightSequencer(game.Mode):
 
     def determinate(self, p, q, rx, ry):
         '''function calculates a determinate between two endpoints of a line and a middle point to see if point is on the line
-            if d is close to zero, point is on the line'''
-        print p.x, p.y, q.x, q.y, rx, ry
+            if d is zero, point is on the line'''
         d = ((q.x-p.x)*(ry-p.y)-(q.y-p.y)*(rx-p.x))
         return d
 
