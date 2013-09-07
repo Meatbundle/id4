@@ -66,9 +66,6 @@ class id4Game(game.BasicGame):
         self.current_player_index = 0
         self.modes.modes = []
 
-        # software version number
-        self.revision = "1"
-
         # basic game reset stuff, copied in
 
         ## init the sound
@@ -83,9 +80,7 @@ class id4Game(game.BasicGame):
 
         # last switch variable for tracking
         self.lastSwitch = None
-        # last ramp for combo tracking
-        self.lastRamp = None
-
+        
         self.ballStarting = False
         self.status = None
         # squelch flag used by audio routines to turn down music without stopping it

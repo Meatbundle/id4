@@ -17,7 +17,7 @@ locale.setlocale(locale.LC_ALL, "")
 curr_file_path = os.path.dirname(os.path.abspath( __file__ ))
 
 class LightSequencer(game.Mode):
-    """this class automates the playing of lights in several different patterns"""
+    """this class automates the playing of lights in several different patterns. It also manages the rest of the lights and keeps track of which ones should be lit/flashing etc."""
     def __init__(self, game, priority):
         super(LightSequencer, self).__init__(game, priority)
         self.minX = 0
@@ -28,6 +28,8 @@ class LightSequencer(game.Mode):
         self.sequences = list()                                         #list of delay functions that we can cancel via cancel_delayed if necessary
         self.effects = list()                                           #list of different Effect objects for storing data between calls
         self.runtime = 0                                                #how long until all of currently queued modes are done
+        self.lamps = list()                                             #list of lamps in the game, just a copy of data from self.game.lamps
+        self.copyLamps()                                                #copies the lamps from game.lamps to own list
         self.loadAll()                                                  #loads all of the lampLists
 
         '''Everything under this comment is temporary and will be removed when no longer needed'''
@@ -36,6 +38,12 @@ class LightSequencer(game.Mode):
         self.white = (255,255,255)
         self.red = (255,0,0)
         self.drawLights()
+
+    def copyLamps(self):
+        """Makes a copy of the lamp list for tracking purposes"""
+        for key in self.game.lamps:
+            self.temp = Light(key.name, 'off')
+            self.lamps.append(self.temp)
 
     def loadAll(self):
         """Loads all desired lamp lists and stores them in self.lampLists"""
@@ -75,7 +83,6 @@ class LightSequencer(game.Mode):
                 self.temp = key[listName]
                 self.tempName = 'list' + str(uuid.uuid1())
                 self.tempDelay = (float(length)/self.maxY)
-                print self.tempDelay
                 self.tempEffect = Effect(self.tempName, self.temp, length, lightTime, repeat, self.tempDelay)
 
                 if overwrite:
@@ -113,14 +120,14 @@ class LightSequencer(game.Mode):
                     self.effects[-1].point2.x = self.maxX
                     self.effects[-1].point2.y = 2
                     self.delayed_name = self.delay(name=self.effects[-1].name, event_type=None, delay=self.tempDelay, handler=self.diagBottomRightToLeft, param=self.effects[-1])
-                    print "running diagBottomRightToLeft"
+                    #print "running diagBottomRightToLeft"
                 elif effect == 'diagTopLeftToRight':
                     self.effects[-1].point1.x = 0
                     self.effects[-1].point1.y = self.maxY - 1
                     self.effects[-1].point2.x = 1
                     self.effects[-1].point2.y = self.maxY
                     self.delayed_name = self.delay(name=self.effects[-1].name, event_type=None, delay=self.tempDelay, handler=self.diagTopLeftToRight, param=self.effects[-1])
-                    print "running diagTopLeftToRight"
+                    #print "running diagTopLeftToRight"
                 elif effect == 'blink':
                     self.blink(self.effects[-1])
                 else:
@@ -166,7 +173,7 @@ class LightSequencer(game.Mode):
             effect.point1.y -= 1
 
     def bottomToTop(self, effect):
-        '''Starts at top of playfield and lights all lamps from bottom to top for effect.lightTime millisceonds, then repeats if required'''
+        '''Starts at bottom of playfield and lights all lamps from bottom to top for effect.lightTime millisceonds, then repeats if required'''
         self.counter = 0
         #process lamps that haven't been processed yet
         for key in effect.lampList:
@@ -200,7 +207,7 @@ class LightSequencer(game.Mode):
             effect.point1.y += 1
 
     def rightToLeft(self, effect):
-        '''Starts at top of playfield and lights all lamps from top to bottom for effect.lightTime millisceonds, then repeats if required'''
+        '''Starts at right of playfield and lights all lamps from right to left for effect.lightTime millisceonds, then repeats if required'''
         self.counter = 0
         #process lamps that haven't been processed yet
         for key in effect.lampList:
@@ -234,7 +241,7 @@ class LightSequencer(game.Mode):
             effect.point1.x -= 1
     
     def leftToRight(self, effect):
-        '''Starts at top of playfield and lights all lamps from top to bottom for effect.lightTime millisceonds, then repeats if required'''
+        '''Starts at left of playfield and lights all lamps from left to right for effect.lightTime millisceonds, then repeats if required'''
         self.counter = 0
         #process lamps that haven't been processed yet
         for key in effect.lampList:
@@ -316,8 +323,8 @@ class LightSequencer(game.Mode):
                 effect.point2.x += 1
 
     def diagBottomRightToLeft(self, effect):
-        '''Starts at bottom left of playfield and lights diagonally up towards upper right of playfield'''
-        print "diagBottomRightToLeft"
+        '''Starts at bottom right of playfield and lights diagonally up towards upper left of playfield'''
+        #print "diagBottomRightToLeft"
         self.counter = 0
         self.litLamp = False
         #process lamps that haven't been processed yet
@@ -372,7 +379,7 @@ class LightSequencer(game.Mode):
 
     def diagTopLeftToRight(self, effect):
             '''Starts at top left of playfield and lights diagonally down towards bottom right of playfield'''
-            print "diagTopLeftToRight"
+            #print "diagTopLeftToRight"
             self.counter = 0
             self.litLamp = False
             #process lamps that haven't been processed yet
@@ -451,6 +458,59 @@ class LightSequencer(game.Mode):
         d = ((q.x-p.x)*(ry-p.y)-(q.y-p.y)*(rx-p.x))
         return d
 
+    def set(self, Name, Status, Schedule = '0xFFFFFFFF'):
+        '''this function sets a particular light to a particular status based on gameplay events. called by different modes to light things correctly. Lamp is not actually
+        changed in this function, all changes happen during the update_lamps function'''
+        for lamp in self.lamps:
+            if lamp.name == Name:
+                lamp.status = Status
+                if Status == 'custom':
+                    lamp.schedule = Schedule
+                self.update_lamps(Name)
+                break
+
+    def update_lamps(self, Name = 'reset'):
+        print 'updating lamps'
+        if Name == 'reset':                     #resetting all lamps, such as after a lightshow etc.
+            for lamp in self.lamps:
+                self.activateLamp(lamp)
+        else:                                   #setting just one lamp
+            for lamp2 in self.lamps:
+                if lamp2.name == Name:
+                    self.activateLamp(lamp2)
+                    
+    def activateLamp(self, Lamp):
+        lamp = Lamp
+        if lamp.status == 'on':
+            self.game.lamps[lamp.name].enable()
+        elif lamp.status == 'off':
+            self.game.lamps[lamp.name].disable()
+        elif lamp.status == 'slow':
+            self.game.lamps[lamp.name].schedule(0x00FF00FF, true)
+        elif lamp.status == 'medium':
+            self.game.lamps[lamp.name].schedule(0x0F0F0F0F, true)
+        elif lamp.status == 'fast':
+            self.game.lamps[lamp.name].schedule(0x55555555, true)
+        elif lamp.status == 'blinkOn':                                                  #light will blink for .6 seconds then go steady, code from Jim (myPinballs on PROC forum)
+            self.game.lamps[lamp.name].schedule(0xAAAAAAAA, true)
+            self.delay(name=lamp.name+'_on', event_type=None, delay=.6, handler=self.game.lamps[lamp.name].enable)
+        elif lamp.status == 'custom':
+            self.game.lamps[lamp.name].schedule(lamp.schedule, true)
+
+    def mode_started(self):
+        pass
+
+    def mode_topmost(self):
+        pass
+
+    def mode_stopped(self):
+        pass
+
+    def mode_tick(self):
+        pass
+
+    '''everything below this gets deleted for final build'''
+
     #delete this function for final build
     def drawLights(self):
         """test method to draw pattern of lights to make sure they are doing what they are supposed to"""
@@ -482,15 +542,3 @@ class LightSequencer(game.Mode):
             if (now-key.timestamp) >= float(effect.lightTime) and key.timestamp != 0:
                 pygame.draw.circle(self.screen, self.white, (key.x * 20, (self.maxY * 20 - key.y * 20)), 8, 0)
                 key.timestamp = 0
-
-    def mode_started(self):
-        pass
-
-    def mode_topmost(self):
-        pass
-
-    def mode_stopped(self):
-        pass
-
-    def mode_tick(self):
-        pass

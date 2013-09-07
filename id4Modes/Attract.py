@@ -20,6 +20,7 @@ class Attract(game.Mode):
         #self.game.lightSeq.play('test', 'bottomToTop', False, 1, 50, 1)
         #self.game.lightSeq.play('test', 'diagBottomLeftToRight', False, 1, 50, 1)
         self.game.lightSeq.play('test', 'diagTopLeftToRight', False, 1, 50, 4)
+        self.game.lightSeq.set('a51Arrow', 'on')
         # run an initial pass on the animation loop
         #self.run_animation_loop()
         # then kick off the timer to run it after that

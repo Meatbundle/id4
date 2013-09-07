@@ -16,11 +16,11 @@ class LeftRamp(game.Mode):
         super(LeftRamp, self).__init__(game, priority)
 
     def sw_leftRampExit_active(self, sw):
-        if self.player.nextRamp == 'either' or self.player.nextRamp == 'left'
-            self.player.rampHits += 1
+        if self.player.nextRamp == 'either' or self.player.nextRamp == 'left':
+            self.player.lRampHits += 1
             self.player.nextRamp = 'right'
 
-        if self.player.rampHits >= self.player.rampHitsRequired
+        if (self.player.lRampHits + self.player.rRampHits) >= self.player.rampHitsRequired:
             #start mode
             #self.game.modes.add(self.game.alienAttack)
             #self.game.modes.alienAttack.startMode(self.game)
@@ -33,11 +33,12 @@ class LeftRamp(game.Mode):
         self.game.lastSwitch = 'leftRampExit'
 
     def sw_leftRampEnter_active(self, sw):
-        if self.game.lastSwitch == 'leftRampEnter'          #shot was unsuccessful
+        if self.game.lastSwitch == 'leftRampEnter':          #shot was unsuccessful
             #play rollback sound
             pass
         else:
             #play enter sound
+            pass
 
         self.game.lastSwitch = 'leftRampEnter'
         self.player.addPoints(10000)

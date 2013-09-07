@@ -10,7 +10,10 @@ class id4Player(object):
     standuptargs = {'left':False, 'mid': False, 'right': False}		#same for standup targets
     a51targs = {'top':False, 'mid': False, 'bottom': False}			#ditto for area 51 targets
 
-    rampHits = 0                #num times ramps have been hit
+    lastShot = 'none'           #for combo tracking
+
+    lRampHits = 0               #how many times left ramp has been hit
+    rRampHits = 0               #how many times right ramp has been hit
     rampsReady = False          #is mode ready to be started
     rampHitsRequired = 0		#how many rampHits are required to start mode
     rampStarted = False         #has player started the ramp mode

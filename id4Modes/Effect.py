@@ -1,3 +1,5 @@
+"""This file contains different classes for use in the LightSequencer class"""
+
 class Point():
     def __init__(self, X, Y):
         self.x = X
@@ -28,3 +30,13 @@ class Effect():
         for key in lamplist:
             self.temp = LampList(0, key, lamplist[key]['x'], lamplist[key]['y'], False)
             self.lampList.append(self.temp)
+
+class Light():
+    """class to hold the status and schedule of a light. schedule is only used if status is set to custom, else default schedules are used in code"""
+    def __init__(self, Name, Status, Schedule=0xFFFFFFFF):
+        self.name = Name
+        self.status = Status
+        self.schedule = Schedule
+
+
+
