@@ -458,7 +458,7 @@ class LightSequencer(game.Mode):
         d = ((q.x-p.x)*(ry-p.y)-(q.y-p.y)*(rx-p.x))
         return d
 
-    def set(self, Name, Status, Schedule = '0xFFFFFFFF'):
+    def setLamp(self, Name, Status, Schedule = '0xFFFFFFFF'):
         '''this function sets a particular light to a particular status based on gameplay events. called by different modes to light things correctly. Lamp is not actually
         changed in this function, all changes happen during the update_lamps function'''
         for lamp in self.lamps:
