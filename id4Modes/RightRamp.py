@@ -26,17 +26,29 @@ class RightRamp(game.Mode):
             self.player.rRampHits += 1
             self.player.nextRamp = 'left'
 
-        if (self.player.rRampHits+self.player.lRampHits) >= self.player.rampHitsRequired:
-            #start mode
-            #self.game.modes.add(self.game.alienAttack)
-            #self.game.modes.alienAttack.startMode(self.game)
-            pass
-        else:
-            #play animation depending on how many hits have been achieved
-            #play sound
-            self.player.addPoints(250000)       #points
-            #light up correct light based on how many hits have been achieved
-            #light light
+            if (self.player.rRampHits+self.player.lRampHits) >= self.player.rampHitsRequired:
+                #start mode
+                #self.game.modes.add(self.game.alienAttack)
+                #self.game.modes.alienAttack.startMode(self.game)
+                pass
+            else:
+                #play animation depending on how many hits have been achieved
+                #play sound
+                self.player.addPoints(250000)       #points
+                #light up correct light based on how many hits have been achieved
+                #light light
+                if self.player.rRampHits == 1:
+                    self.game.lightSeq.setLamp(Name='ramp10mR', Status = 'blinkOn')     #set this ramp's light to on
+                    self.game.lightSeq.setLamp(Name='rampArrowL', Status = 'fast')   #set left arrow to blink
+                    self.player.self.game.lightSeq.setLamp(Name='rampArrowR', Status = 'off')       #turn off right arrow
+                elif self.player.rRampHits == 2:
+                    self.game.lightSeq.setLamp(Name = 'ramp20mR', Status = 'blinkOn')
+                    self.game.lightSeq.setLamp(Name='rampArrowL', Status = 'fast')   #set left arrow to blink
+                    self.player.self.game.lightSeq.setLamp(Name='rampArrowR', Status = 'off')       #turn off right arrow
+                elif self.player.rRampHits == 3:
+                    self.game.lightSeq.setLamp(Name = 'rampArrowR', Status = 'fast')
+                    self.game.lightSeq.setLamp(Name='rampArrowL', Status = 'on')   #set left arrow to blink
+        
         self.game.lastSwitch = 'rightRampExit'
 
     def sw_rightRampEnter_active(self, sw):
