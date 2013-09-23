@@ -5,6 +5,8 @@ class id4Player(object):
     name = None
     extra_balls = 0
     game_time = 0
+    combo = 0
+    comboDelayFunction = 'comboDelayFunction'
 
     hurrytargs = {'top':False, 'mid': False, 'bottom': False}		#flags for if hurryup targets have been hit or not
     standuptargs = {'left':False, 'mid': False, 'right': False}		#same for standup targets
@@ -49,3 +51,6 @@ class id4Player(object):
     def __init__(self, name):
         super(Player, self).__init__()
         self.name = name
+        
+    def comboDone(self)         'resets combo flag to 0
+        self.combo = 0
