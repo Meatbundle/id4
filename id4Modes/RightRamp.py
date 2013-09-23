@@ -20,7 +20,7 @@ class RightRamp(game.Mode):
             self.player.addPoints(combo*1000000)
             self.player.combo += 1
             self.player.cancel_delayed(self.player.comboDelayFunction)
-            self.player.comboDelayFunction = delay(name='comboDelayFunction', event_type=None, delay=5, handler='self.player.comboDone()', param=None)
+            self.player.comboDelayFunction = delay(name='comboDelayFunction', event_type=None, delay=5, handler=self.player.comboDone, param=None)
 
         if self.player.nextRamp == 'either' or self.player.nextRamp == 'right':
             self.player.rRampHits += 1
