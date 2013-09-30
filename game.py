@@ -204,6 +204,8 @@ class id4Game(game.BasicGame):
         self.modes.add(self.base)
         self.modes.add(self.leftOrbit)
         self.modes.add(self.rightOrbit)
+        self.modes.add(self.leftRamp)
+        self.modes.add(self.rightRamp)
         # Start the ball.  This includes ejecting a ball from the trough.
         self.start_ball()
         # add the ability to see the status
