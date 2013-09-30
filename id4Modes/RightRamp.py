@@ -9,7 +9,7 @@ from LightSequencer import *
 locale.setlocale(locale.LC_ALL, "")
 
 class RightRamp(game.Mode):
-    """Handles regular play for the left ramp"""
+    """Handles regular play for the right ramp"""
     def __init__(self, game, priority):
         self.game = game
         self.player = self.game.current_player()
@@ -21,7 +21,11 @@ class RightRamp(game.Mode):
             self.player.combo += 1
             self.player.cancel_delayed(self.player.comboDelayFunction)
             self.player.comboDelayFunction = delay(name='comboDelayFunction', event_type=None, delay=5, handler=self.player.comboDone, param=None)
-
+        else:
+            #also start combo timer
+            self.player.combo = 1
+            self.player.comboDelayFunction = delay(name='comboDelayFunction', event_type=None, delay=5, handler=self.player.comboDone, param=None)
+        
         if self.player.nextRamp == 'either' or self.player.nextRamp == 'right':
             self.player.rRampHits += 1
             self.player.nextRamp = 'left'
@@ -30,6 +34,7 @@ class RightRamp(game.Mode):
                 #start mode
                 #self.game.modes.add(self.game.alienAttack)
                 #self.game.modes.alienAttack.startMode(self.game)
+                #disable this mode
                 pass
             else:
                 #play animation depending on how many hits have been achieved
@@ -42,12 +47,14 @@ class RightRamp(game.Mode):
                     self.game.lightSeq.setLamp(Name='rampArrowL', Status = 'fast')   #set left arrow to blink
                     self.player.self.game.lightSeq.setLamp(Name='rampArrowR', Status = 'off')       #turn off right arrow
                 elif self.player.rRampHits == 2:
-                    self.game.lightSeq.setLamp(Name = 'ramp20mR', Status = 'blinkOn')
+                    self.game.lightSeq.setLamp(Name='ramp10mR', Status = 'on')
+                    self.game.lightSeq.setLamp(Name='ramp20mR', Status = 'blinkOn')
                     self.game.lightSeq.setLamp(Name='rampArrowL', Status = 'fast')   #set left arrow to blink
                     self.player.self.game.lightSeq.setLamp(Name='rampArrowR', Status = 'off')       #turn off right arrow
                 elif self.player.rRampHits == 3:
-                    self.game.lightSeq.setLamp(Name = 'rampArrowR', Status = 'fast')
-                    self.game.lightSeq.setLamp(Name='rampArrowL', Status = 'on')   #set left arrow to blink
+                    self.game.lightSeq.setLamp(Name='ramp20mR', Status = 'on'
+                    self.game.lightSeq.setLamp(Name='rampArrowR', Status = 'on')
+                    self.game.lightSeq.setLamp(Name='rampArrowL', Status = 'fast')   #set left arrow to blink
         
         self.game.lastSwitch = 'rightRampExit'
 
