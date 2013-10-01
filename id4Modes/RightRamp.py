@@ -42,16 +42,16 @@ class RightRamp(game.Mode):
                 self.player.addPoints(250000)       #points
                 #light up correct light based on how many hits have been achieved
                 #light light
-                if self.player.rRampHits == 1:
+                if self.player.rRampHits <= self.player.rampHitsRequired/6):
                     self.game.lightSeq.setLamp(Name='ramp10mR', Status = 'blinkOn')     #set this ramp's light to on
                     self.game.lightSeq.setLamp(Name='rampArrowL', Status = 'fast')   #set left arrow to blink
                     self.player.self.game.lightSeq.setLamp(Name='rampArrowR', Status = 'off')       #turn off right arrow
-                elif self.player.rRampHits == 2:
+                elif self.player.rRampHits <= self.player.rampHitsRequired/3:
                     self.game.lightSeq.setLamp(Name='ramp10mR', Status = 'on')
                     self.game.lightSeq.setLamp(Name='ramp20mR', Status = 'blinkOn')
                     self.game.lightSeq.setLamp(Name='rampArrowL', Status = 'fast')   #set left arrow to blink
                     self.player.self.game.lightSeq.setLamp(Name='rampArrowR', Status = 'off')       #turn off right arrow
-                elif self.player.rRampHits == 3:
+                elif self.player.rRampHits <= self.player.rampHitsRequired/2:
                     self.game.lightSeq.setLamp(Name='ramp20mR', Status = 'on'
                     self.game.lightSeq.setLamp(Name='rampArrowR', Status = 'on')
                     self.game.lightSeq.setLamp(Name='rampArrowL', Status = 'fast')   #set left arrow to blink
