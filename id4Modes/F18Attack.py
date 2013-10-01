@@ -44,7 +44,7 @@ class F18Attack(game.Mode):
                 self.player.f18HitsForComplete -= 1
 
                 #light rightorb light to show player which shot is next jackpot
-                self.game.lightSeq.setLamp(Name='rightOrbL', Status = 'fast')
+                self.game.lightSeq.setLamp(Name='orbitArrowR', Status = 'fast')
 
         self.game.lastSwitch = 'leftOrbTop'
         return game.switchStop
@@ -73,6 +73,7 @@ class F18Attack(game.Mode):
                 self.player.f18HitsForComplete -= 1
                 
                 #light leftside light to show player which jackpot is now lit
+                self.game.lightSeq.setLamp(Name='orbitArrowL', Status = 'fast')
 
         self.game.lastSwitch = 'rightOrbTop'
         return game.switchStop
